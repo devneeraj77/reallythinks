@@ -40,7 +40,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         // Fetch user from Redis
         const user = await redis.hgetall(`user:${email}`);
-        await redis.hget("users", username as string);
 
         // If user exists, validate the password
         if (user && user.password === password) {
