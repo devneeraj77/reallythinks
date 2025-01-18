@@ -1,10 +1,10 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { auth } from "@/auth";
 import { useRouter } from "next/navigation";
 
-export default function ProfilePage() {
-  const { data: session, status } = useSession();
+export default async function ProfilePage() {
+  const session = await auth();
   const router = useRouter();
 
   if (status === "loading") return <p>Loading...</p>;
