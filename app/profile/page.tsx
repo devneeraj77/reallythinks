@@ -16,6 +16,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+      fdsafa
       <div className="flex items-center space-x-4">
         <img
           src={session.user.image || "/default-avatar.png"}
