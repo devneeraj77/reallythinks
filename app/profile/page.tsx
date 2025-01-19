@@ -1,5 +1,3 @@
-"use client";
-
 import { auth } from "@/auth";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
