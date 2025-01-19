@@ -11,7 +11,7 @@ export default async function UserButton() {
       <span className="hidden text-sm sm:inline-flex">
         {session.user.email}
       </span>
-      <Avatar className="h-8 w-8">
+      <Avatar className="h-32 w-32">
         <AvatarImage
           src={
             session.user.image ??
