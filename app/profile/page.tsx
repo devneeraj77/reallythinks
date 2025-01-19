@@ -1,46 +1,51 @@
-"use client";
-
-import { auth } from "@/auth";
+import { SignIn } from "@/components/auth-components";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { auth } from "auth";
 
-export default async function ProfilePage() {
+export default async function UserButton() {
   const session = await auth();
-  const router = useRouter();
-
-  if (status === "loading") return <p>Loading...</p>;
-
-  if (!session?.user) {
-    router.push("/login");
-    return <p>Redirecting to login...</p>;
-  }
-
+  if (!session?.user) return <SignIn />;
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+    <div className="flex items-center gap-2">
       <span className="hidden text-sm sm:inline-flex">
         {session.user.email}
       </span>
-      <div className="flex items-center space-x-4">
-        <Avatar className="h-8 w-8">
-          <AvatarImage
-            src={
-              session.user.image ??
-              `https://api.dicebear.com/9.x/thumbs/svg?seed=${
-                Math.floor(Math.random() * 100000) + 1
-              }&randomizeIds=true`
-            }
-            alt={session.user.name ?? ""}
-          />
-        </Avatar>
-        <div className="flex flex-col space-y-1">
-          <p className="text-sm font-medium leading-none">
-            {session.user.name}
-          </p>
-          <p className="text-muted-foreground text-xs leading-none">
-            {session.user.email}
-          </p>
-        </div>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+            <Avatar className="h-8 w-8">
+              <AvatarImage
+                src={
+                  session.user.image ??
+                  `https://api.dicebear.com/9.x/thumbs/svg?seed=${
+                    Math.floor(Math.random() * 100000) + 1
+                  }&randomizeIds=true`
+                }
+                alt={session.user.name ?? ""}
+              />
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end" forceMount>
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium leading-none">
+                {session.user.name}
+              </p>
+              <p className="text-muted-foreground text-xs leading-none">
+                {session.user.email}
+              </p>
+            </div>
+          </DropdownMenuLabel>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }
