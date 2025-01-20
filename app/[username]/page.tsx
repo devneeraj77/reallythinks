@@ -4,5 +4,5 @@ export default async function Page({
   params: Promise<{ username: string }>;
 }) {
   const { username } = await params;
-  return <h1>Blog Post: {username}</h1>;
+  return <h1>my Username: {username}</h1>;
 }
