@@ -2,6 +2,7 @@ import { z } from "zod";
 
 // Zod schema to validate error messages
 export const errorSchema = z.object({
+  error: z.string(),
   message: z.string(),
   code: z.string().optional(),
   details: z.string().optional(),

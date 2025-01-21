@@ -1,19 +1,28 @@
-import redis from "@/lib/redis";
+"use client";
 
-interface UserProfile {
-  username: string;
-  email: string;
-  image: string;
-}
+import { useState } from "react";
 
-export default async function UserPage({
-  params,
-}: {
-  params: Promise<{ username: string }>;
-}) {
-  const { username } = await params;
+export default function Profile({ params }: { params: { username: string } }) {
+  const [message, setMessage] = useState("");
 
-  const userData = await redis.get(`user:${username}`);
+  const sendMessage = async () => {
+    await fetch("/api/messages", {
+      method: "POST",
+      body: JSON.stringify({ receiver: params.username, content: message }),
+      headers: { "Content-Type": "application/json" },
+    });
+    setMessage("");
+  };
 
-  return <h1>my Username: {username}</h1>;
+  return (
+    <div>
+      <h1>Send an Anonymous Message to {params.username}</h1>
+      <textarea
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Write your message..."
+      />
+      <button onClick={sendMessage}>Send</button>
+    </div>
+  );
 }
