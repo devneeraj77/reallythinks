@@ -2,13 +2,20 @@
 
 import { useState } from "react";
 
-export default function Profile({ params }: { params: { username: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}) {
   const [message, setMessage] = useState("");
 
   const sendMessage = async () => {
     await fetch("/api/messages", {
       method: "POST",
-      body: JSON.stringify({ receiver: params.username, content: message }),
+      body: JSON.stringify({
+        receiver: (await params).username,
+        content: message,
+      }),
       headers: { "Content-Type": "application/json" },
     });
     setMessage("");
@@ -16,7 +23,7 @@ export default function Profile({ params }: { params: { username: string } }) {
 
   return (
     <div>
-      <h1>Send an Anonymous Message to {params.username}</h1>
+      <h1>Send an Anonymous Message to {(await params).username}</h1>
       <textarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}

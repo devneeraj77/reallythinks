@@ -7,7 +7,7 @@ export const MessageSchema = z.object({
   content: z
     .string()
     .min(1)
-    .max(500),
+    .max(50),
   timestamp: z.number().default(() => Date.now()),
 });
 

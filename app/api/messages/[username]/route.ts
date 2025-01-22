@@ -3,10 +3,14 @@ import redis from "@/lib/redis";
 
 export async function GET(
   request: Request,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
   try {
-    const messages = await redis.lrange(`messages:${params.username}`, 0, -1);
+    const messages = await redis.lrange(
+      `messages:${(await params).username}`,
+      0,
+      -1
+    );
     return NextResponse.json(messages.map((msg) => JSON.parse(msg)));
   } catch (error) {
     console.error("Error fetching messages:", error);
