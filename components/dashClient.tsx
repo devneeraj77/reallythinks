@@ -6,7 +6,7 @@ import MessageList from "@/components/MessageList";
 
 const DashboardPage = () => {
   const { data: session, status } = useSession();
-  const [messages, setMessages] = useState<any[]>([]); // Type as an array of objects
+  const [messages, setMessages] = useState<any[]>([]); // Adjusted to be any for the response data
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -54,7 +54,7 @@ const DashboardPage = () => {
       <p className="text-gray-500 mb-6">
         Here are the anonymous messages sent to you:
       </p>
-      <MessageList messages={messages} /> {/* Pass messages as prop */}
+      <MessageList messages={messages} />
     </div>
   );
 };

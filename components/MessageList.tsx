@@ -1,9 +1,7 @@
-// components/MessageList.tsx
 interface Message {
-  id: string;
   sender: string | null;
   content: string;
-  timestamp: number;
+  timestamp: string; // Assuming the timestamp is in string format, adjust as needed.
 }
 
 interface MessageListProps {
@@ -16,8 +14,11 @@ const MessageList = ({ messages }: MessageListProps) => {
       {messages.length === 0 ? (
         <p>No messages yet.</p>
       ) : (
-        messages.map((message) => (
-          <div key={message.id} className="message-item">
+        messages.map((message, index) => (
+          <div
+            key={index}
+            className="message-item p-4 mb-4 bg-gray-100 rounded-md shadow-sm"
+          >
             <p>
               <strong>
                 {message.sender ? `From: ${message.sender}` : "Anonymous"}
