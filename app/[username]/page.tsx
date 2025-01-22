@@ -1,35 +1,16 @@
-"use client";
+import SendMessage from "../../components/SendMessage"; // Adjust relative path as necessary
 
-import { useState } from "react";
-
-export default async function Page({
+export default async function UserPage({
   params,
 }: {
   params: Promise<{ username: string }>;
 }) {
-  const [message, setMessage] = useState("");
-
-  const sendMessage = async () => {
-    await fetch("/api/messages", {
-      method: "POST",
-      body: JSON.stringify({
-        receiver: (await params).username,
-        content: message,
-      }),
-      headers: { "Content-Type": "application/json" },
-    });
-    setMessage("");
-  };
-
   return (
-    <div>
-      <h1>Send an Anonymous Message to {(await params).username}</h1>
-      <textarea
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Write your message..."
-      />
-      <button onClick={sendMessage}>Send</button>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">
+        Send an Anonymous Message to {(await params).username}
+      </h1>
+      <SendMessage receiver={(await params).username} />
     </div>
   );
 }

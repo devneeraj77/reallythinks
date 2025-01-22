@@ -1,5 +1,6 @@
-import CustomLink from "./custom-link"
-import packageJSON from "next-auth/package.json"
+import Image from "next/image";
+import CustomLink from "./custom-link";
+import packageJSON from "next-auth/package.json";
 
 export default function Footer() {
   return (
@@ -15,7 +16,7 @@ export default function Footer() {
         <CustomLink href="/policy">Policy</CustomLink>
       </div>
       <div className="flex items-center justify-start gap-2">
-        <img
+        <Image
           className="size-5"
           src="https://authjs.dev/img/logo-sm.png"
           alt="Auth.js Logo"
@@ -25,5 +26,5 @@ export default function Footer() {
         </CustomLink>
       </div>
     </footer>
-  )
+  );
 }
