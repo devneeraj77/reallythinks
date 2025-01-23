@@ -10,7 +10,6 @@ interface SendMessageProps {
 export default function SendMessage({ receiver }: SendMessageProps) {
   const [message, setMessage] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleSendMessage = async () => {
     if (!message.trim()) {
@@ -18,10 +17,8 @@ export default function SendMessage({ receiver }: SendMessageProps) {
       return;
     }
 
-    setLoading(true); // Set loading to true when sending message
-
     try {
-      const response = await fetch("/api/send-message", {
+      const response = await fetch("/api/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +32,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(""); // Clear the input after successful send
+        setMessage("");
         setStatusMessage("Message sent successfully!");
       } else {
         setStatusMessage(data.error || "Failed to send the message.");
@@ -43,8 +40,6 @@ export default function SendMessage({ receiver }: SendMessageProps) {
     } catch (error) {
       console.error("Error sending message:", error);
       setStatusMessage("An error occurred. Please try again.");
-    } finally {
-      setLoading(false); // Set loading to false after the operation is complete
     }
   };
 
@@ -61,9 +56,8 @@ export default function SendMessage({ receiver }: SendMessageProps) {
       <button
         onClick={handleSendMessage}
         className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
-        disabled={loading} // Disable the button while sending the message
       >
-        {loading ? "Sending..." : "Send Message"}
+        Send Message
       </button>
 
       {statusMessage && (

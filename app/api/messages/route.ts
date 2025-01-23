@@ -6,35 +6,36 @@ import { z } from "zod";
 
 export async function POST(req: Request) {
   try {
-    // Parse the incoming message body
+    // Parse the request body and validate it
     const body = await req.json();
-    const validatedMessage = MessageSchema.parse(body); // Validate the message format with Zod
+    const validatedMessage = MessageSchema.parse(body); // Validate the incoming message with Zod
 
     const { receiver, ...messageData } = validatedMessage;
 
-    // Check if the receiver exists in Redis database
+    // Log and check if the receiver exists in Redis
     console.log("Validating receiver existence...");
     const userExists = await redis.exists(`user:${receiver}`);
     if (!userExists) {
       console.error("Receiver not found:", receiver);
       return NextResponse.json(
         { error: "Receiver not found." },
-        { status: 404 } // Return 404 if the user doesn't exist
+        { status: 404 }
       );
     }
 
-    // Prepare the message for saving
+    // Create a unique message ID and save it to the Redis list for the receiver
     const message = {
       ...messageData,
       id: crypto.randomUUID(), // Generate a unique ID for the message
     };
 
     console.log("Saving message:", message);
-    await redis.rpush(`messages:${receiver}`, JSON.stringify(message)); // Save the message to Redis
+    await redis.rpush(`messages:${receiver}`, JSON.stringify(message)); // Save the message
 
+    // Return success response
     return NextResponse.json(
       { success: true, message: "Message sent successfully!" },
-      { status: 200 } // Return success response
+      { status: 200 }
     );
   } catch (error) {
     console.error("Error in send-message route:", error);
@@ -47,7 +48,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Handle other errors
+    // Generic error response
     return NextResponse.json(
       { error: "An error occurred while sending the message." },
       { status: 500 }
