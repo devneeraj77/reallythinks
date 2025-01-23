@@ -8,28 +8,37 @@ interface SendMessageProps {
 
 export default function SendMessage({ receiver }: SendMessageProps) {
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle"
-  );
+  const [statusMessage, setStatusMessage] = useState("");
 
-  const sendMessage = async () => {
-    setStatus("sending");
+  const handleSendMessage = async () => {
+    if (!message.trim()) {
+      setStatusMessage("Message cannot be empty.");
+      return;
+    }
+
     try {
-      const response = await fetch("/api/messages", {
+      const response = await fetch("/api/send-message", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ receiver, content: message }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          receiver,
+          content: message,
+        }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        setMessage("");
-        setStatus("sent");
+        setMessage(""); // Clear the input field
+        setStatusMessage("Message sent successfully!");
       } else {
-        setStatus("error");
+        setStatusMessage(data.error || "Failed to send the message.");
       }
     } catch (error) {
       console.error("Error sending message:", error);
-      setStatus("error");
+      setStatusMessage("An error occurred. Please try again.");
     }
   };
 
@@ -38,27 +47,27 @@ export default function SendMessage({ receiver }: SendMessageProps) {
       <textarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Write your message..."
-        className="w-full p-2 border rounded mb-4"
-        rows={4}
-      />
+        placeholder="Write your message here..."
+        className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        rows={5}
+      ></textarea>
+
       <button
-        onClick={sendMessage}
-        disabled={status === "sending" || !message.trim()}
-        className={`px-4 py-2 rounded ${
-          status === "sending"
-            ? "bg-gray-500 cursor-not-allowed"
-            : "bg-blue-500 text-white"
-        }`}
+        onClick={handleSendMessage}
+        className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
       >
-        {status === "sending" ? "Sending..." : "Send"}
+        Send Message
       </button>
-      {status === "sent" && (
-        <p className="text-green-500 mt-2">Message sent successfully!</p>
-      )}
-      {status === "error" && (
-        <p className="text-red-500 mt-2">
-          An error occurred. Please try again.
+
+      {statusMessage && (
+        <p
+          className={`mt-4 text-center ${
+            statusMessage.includes("successfully")
+              ? "text-green-500"
+              : "text-red-500"
+          }`}
+        >
+          {statusMessage}
         </p>
       )}
     </div>
