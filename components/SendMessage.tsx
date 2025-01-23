@@ -17,7 +17,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
     }
 
     try {
-      const response = await fetch("/api/send-message", {
+      const response = await fetch("/api/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
