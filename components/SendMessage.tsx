@@ -1,3 +1,4 @@
+// components/SendMessage.tsx
 "use client";
 
 import { useState } from "react";
@@ -17,7 +18,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
     }
 
     try {
-      const response = await fetch("/api/messages", {
+      const response = await fetch("/api/send-message", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,7 +32,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(""); // Clear the input field
+        setMessage("");
         setStatusMessage("Message sent successfully!");
       } else {
         setStatusMessage(data.error || "Failed to send the message.");
