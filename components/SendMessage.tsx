@@ -4,10 +4,10 @@ import redis from "@/lib/redis";
 import { useState } from "react";
 
 interface SendMessageProps {
-  receiver: string;
+  username: string;
 }
 
-export default function SendMessage({ receiver }: SendMessageProps) {
+export default function SendMessage({ username }: SendMessageProps) {
   const [status, setStatus] = useState({
     success: true,
     message: "",
@@ -25,12 +25,6 @@ export default function SendMessage({ receiver }: SendMessageProps) {
     }
 
     try {
-      // Log and check if the receiver exists in Redis
-      console.log("Validating receiver existence...");
-      const userExists = await redis.exists(`user:${receiver}`);
-      if (!userExists) {
-        return <div>Receiver not found, receiver</div>;
-      }
       setLoading(true);
       const res = await fetch("/api/messages", {
         method: "POST",
@@ -38,7 +32,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          receiver,
+          username,
           content: message,
         }),
       });
@@ -73,7 +67,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
         {/* Header */}
         <div>
           <h2 className="text-lg text-balance text-gray-600 dark:text-gray-400 pt-6">
-            Send an anonymous message to {receiver}
+            Send an anonymous message to {username}
           </h2>
           <textarea
             value={message}

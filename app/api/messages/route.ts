@@ -10,7 +10,18 @@ export async function POST(req: Request) {
     const body = await req.json();
     const validatedMessage = MessageSchema.parse(body); // Validate the incoming message with Zod
 
-    const { receiver, ...messageData } = validatedMessage;
+    const { username, ...messageData } = validatedMessage;
+
+    // Log and check if the receiver exists in Redis
+    console.log("Validating receiver existence...");
+    const userExists = await redis.exists(`user:${username}`);
+    if (!userExists) {
+      console.error("Receiver not found:", username);
+      return NextResponse.json(
+        { error: "Receiver not found." },
+        { status: 404 }
+      );
+    }
 
     // Create a unique message ID and save it to the Redis list for the receiver
     const message = {
@@ -19,7 +30,7 @@ export async function POST(req: Request) {
     };
 
     console.log("Saving message:", message);
-    await redis.rpush(`messages:${receiver}`, JSON.stringify(message)); // Save the message
+    await redis.rpush(`messages:${username}`, JSON.stringify(message)); // Save the message
 
     // Return success response
     return NextResponse.json(
