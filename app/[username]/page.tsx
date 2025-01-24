@@ -1,16 +1,18 @@
-import SendMessage from "../../components/SendMessage"; // Adjust relative path as necessary
+import SendMessage from "@/components/SendMessage"; // Adjust the path as necessary
 
 export default async function UserPage({
   params,
 }: {
   params: Promise<{ username: string }>;
 }) {
+  const username = (await params).username.toLowerCase(); // Normalize the username
+
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">
-        Send an Anonymous Message to {(await params).username}
+    <div className="p-4 max-w-md mx-auto">
+      <h1 className="text-2xl font-bold mb-4 text-center">
+        Send an Anonymous Message to {username}
       </h1>
-      <SendMessage receiver={(await params).username} />
+      <SendMessage receiver={username} />
     </div>
   );
 }
