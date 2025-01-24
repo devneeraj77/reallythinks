@@ -1,5 +1,4 @@
 // @/app/api/send-message/route.ts
-import { checkReceiverExists } from "@/lib/checkReceiver";
 import redis from "@/lib/redis";
 import { MessageSchema } from "@/lib/schemas/message";
 import { NextResponse } from "next/server";
@@ -13,20 +12,22 @@ export async function POST(req: Request) {
 
     const { receiver, ...messageData } = validatedMessage;
 
-
-   // Check if the receiver exists in the Redis database
-   const receiverExists = await checkReceiverExists(receiver);
-   if (!receiverExists) {
-     return NextResponse.json(
-       { error: "Receiver not found." },
-       { status: 404 }
-     );
-   }
+    // Log and check if the receiver exists in Redis
+    // console.log("Validating receiver existence...");
+    // const userExists = await redis.get(`user:${receiver}`);
+    // if (!userExists) {
+    //   console.error("Receiver not found:", receiver);
+    //   return NextResponse.json(
+    //     { error: "Receiver not found." },
+    //     { status: 404 }
+    //   );
+    // }
 
     // Create a unique message ID and save it to the Redis list for the receiver
     const message = {
       receiver,
-      ...messageData, // Generate a unique ID for the message
+      ...messageData,
+      // Generate a unique ID for the message
     };
 
     console.log("Saving message:", message);
