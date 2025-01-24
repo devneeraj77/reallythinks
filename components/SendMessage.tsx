@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 interface SendMessageProps {
@@ -7,6 +8,7 @@ interface SendMessageProps {
 }
 
 export default function SendMessage({ receiver }: SendMessageProps) {
+  const { data: session } = useSession();
   const [status, setStatus] = useState({
     success: true,
     message: "",
@@ -14,6 +16,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  if (!session?.user) return null;
   const handleSendMessage = async () => {
     if (!message.trim()) {
       setStatus({
