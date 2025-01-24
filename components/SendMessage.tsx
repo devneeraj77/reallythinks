@@ -1,5 +1,6 @@
 "use client";
 
+import redis from "@/lib/redis";
 import { useState } from "react";
 
 interface SendMessageProps {
@@ -24,6 +25,12 @@ export default function SendMessage({ receiver }: SendMessageProps) {
     }
 
     try {
+      // Log and check if the receiver exists in Redis
+      console.log("Validating receiver existence...");
+      const userExists = await redis.exists(`user:${receiver}`);
+      if (!userExists) {
+        return <div>Receiver not found, receiver</div>;
+      }
       setLoading(true);
       const res = await fetch("/api/messages", {
         method: "POST",
