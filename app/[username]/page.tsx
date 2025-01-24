@@ -7,6 +7,10 @@ export default async function UserPage({
 }) {
   const username = (await params).username.toLowerCase(); // Normalize username
 
+  if (!username) {
+    return <div>user unavaible</div>;
+  }
+
   return (
     <div className="p-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-4 text-center">
