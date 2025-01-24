@@ -2,12 +2,7 @@ import NextAuth from "next-auth";
 import "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter";
-import { Redis } from "@upstash/redis";
-
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_URL!,
-  token: process.env.UPSTASH_REDIS_TOKEN!,
-});
+import redis from "./lib/redis";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: !!process.env.AUTH_DEBUG,
