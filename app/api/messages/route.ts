@@ -1,6 +1,7 @@
-import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { Redis } from "@upstash/redis";
+import { MessageSchema } from "@/lib/schemas/message";
 
 // Initialize Redis
 const redis = new Redis({
@@ -8,25 +9,17 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_TOKEN!,
 });
 
-// Define the message schema
-const MessageSchema = z.object({
-  receiver: z.string(),
-  content: z.string().min(1).max(50),
-  timestamp: z.number().default(() => Date.now()),
-});
-
-// API route to handle message sending
-export const POST = async (req: Request) => {
+export async function POST(req: Request) {
   try {
+    // Parse the request body and validate it
     const body = await req.json();
+    const validatedMessage = MessageSchema.parse(body); // Validate the incoming message with Zod
 
-    // Validate the incoming request body
-    const validatedMessage = MessageSchema.parse(body);
-    const { receiver, content, timestamp } = validatedMessage;
+    const { receiver, content } = validatedMessage;
 
-    // Check if the receiver exists in the database (or Redis in this case)
+    // Log and check if the receiver exists in Redis
+    console.log("Validating receiver existence...");
     const userExists = await redis.get(`user:${receiver}`);
-
     if (!userExists) {
       console.error("Receiver not found:", receiver);
       return NextResponse.json(
@@ -35,37 +28,36 @@ export const POST = async (req: Request) => {
       );
     }
 
-    // Proceed with storing the message if the receiver exists
+    // Create a unique message ID and save it to the Redis list for the receiver
     const message = {
-      id: crypto.randomUUID(),
-      receiver,
-      content,
-      timestamp,
+      ...validatedMessage,
+      id: crypto.randomUUID(), // Generate a unique ID for the message
+      timestamp: Date.now(),
     };
 
-    // Store the message in Redis under the receiver's key
-    await redis.rpush(`messages:${receiver}`, JSON.stringify(message));
+    console.log("Saving message:", message);
+    await redis.rpush(`messages:${receiver}`, JSON.stringify(message)); // Save the message
 
-    // Respond with a success message
-    return new NextResponse(
-      JSON.stringify({ success: true, message: "Message sent successfully!" }),
+    // Return success response
+    return NextResponse.json(
+      { success: true, message: "Message sent successfully!" },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error in send-message API:", error);
+    console.error("Error in send-message route:", error);
 
+    // Handle validation errors from Zod
     if (error instanceof z.ZodError) {
-      // Return validation errors if Zod schema validation fails
-      return new NextResponse(
-        JSON.stringify({ error: error.errors.map((err) => err.message) }),
+      return NextResponse.json(
+        { error: error.errors.map((err) => err.message) },
         { status: 400 }
       );
     }
 
-    // Return a generic error message
-    return new NextResponse(
-      JSON.stringify({ error: "An error occurred while sending the message." }),
+    // Generic error response
+    return NextResponse.json(
+      { error: "An error occurred while sending the message." },
       { status: 500 }
     );
   }
-};
+}

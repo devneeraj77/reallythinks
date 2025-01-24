@@ -1,11 +1,11 @@
-import SendMessage from "../../components/SendMessage"; // Adjust relative path as necessary
+import SendMessage from "../../components/SendMessage"; // Adjust the relative path as necessary
 
 export default async function UserPage({
   params,
 }: {
   params: Promise<{ username: string }>;
 }) {
-  const username = (await params).username.toLowerCase(); // Normalize the username
+  const { username } = await params;
 
   return (
     <div className="p-4">
