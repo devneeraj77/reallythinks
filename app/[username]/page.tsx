@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 
-export default function UserPage({ params }: { params: { username: string } }) {
-  const username = params.username.toLowerCase(); // Normalize username
+export default async function UserPage({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}) {
+  const username = (await params).username.toLowerCase(); // Normalize username
   const [message, setMessage] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [loading, setLoading] = useState(false);
