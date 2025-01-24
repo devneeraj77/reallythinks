@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     const { receiver, content, timestamp } = validatedData;
 
     // Check if the receiver exists in Redis
-    const userExists = await redis.get(`user:${receiver}`);
+    const userExists = await redis.get(`users:${receiver}`);
     if (!userExists) {
       return NextResponse.json(
         { error: "Receiver not found." },
