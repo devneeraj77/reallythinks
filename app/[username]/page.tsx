@@ -1,12 +1,6 @@
-import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
 import SendMessage from "../../components/SendMessage";
-
-// Initialize Redis
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_URL!,
-  token: process.env.UPSTASH_REDIS_TOKEN!,
-});
+import redis from "@/lib/redis";
 
 export default async function UserPage({
   params,
@@ -18,7 +12,6 @@ export default async function UserPage({
 
   // Check if the receiver exists in the Redis database
   try {
-    console.log("Validating receiver existence...");
     const userExists = await redis.exists(`user:${username}`);
 
     // If the receiver doesn't exist, return an error response
@@ -40,7 +33,6 @@ export default async function UserPage({
       </div>
     );
   } catch (error) {
-    console.error("Error validating receiver:", error);
     return NextResponse.json(
       { error: "An error occurred while validating the receiver." },
       { status: 500 }
