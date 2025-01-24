@@ -22,7 +22,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
       });
       return;
     }
-
+    // ff
     try {
       setLoading(true);
       const res = await fetch("/api/messages", {
