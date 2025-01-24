@@ -14,7 +14,7 @@ const DashboardPage = () => {
     const fetchMessages = async () => {
       if (session?.user?.name) {
         try {
-          const response = await fetch(`/api/messages/${session.user.name}`);
+          const response = await fetch(`/api/messages/uneerajrekwar`);
           if (!response.ok) {
             throw new Error("Failed to fetch messages.");
           }
