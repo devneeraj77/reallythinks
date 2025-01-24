@@ -1,6 +1,7 @@
 // @/app/api/send-message/route.ts
 import redis from "@/lib/redis";
 import { MessageSchema } from "@/lib/schemas/message";
+import { checkUserExists } from "@/lib/userCheck";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -12,9 +13,11 @@ export async function POST(req: Request) {
 
     const { receiver, ...messageData } = validatedMessage;
 
-    // Log and check if the receiver exists in Redis
+    // Check if the receiver exists using the user-check function
     console.log("Validating receiver existence...");
-    const userExists = await redis.exists(`users:${receiver}`);
+    const userExists = await checkUserExists(receiver);
+
+    // If the receiver doesn't exist, respond with an error
     if (!userExists) {
       console.error("Receiver not found:", receiver);
       return NextResponse.json(
