@@ -6,9 +6,9 @@ import { notFound } from "next/navigation";
 export default async function UserPage({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }) {
-  const username = params.username.toLowerCase();
+  const username = (await params).username.toLowerCase();
 
   const userExists = await redis.exists(`user:${username}`);
   if (!userExists) {
