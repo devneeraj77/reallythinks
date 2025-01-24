@@ -12,7 +12,7 @@ export default async function UserPage({
       <h1 className="text-2xl font-bold mb-4 text-center">
         Send an Anonymous Message to {username}
       </h1>
-      <SendMessage username={username} />
+      <SendMessage receiver={username} />
     </div>
   );
 }

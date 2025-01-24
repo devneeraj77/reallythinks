@@ -3,10 +3,10 @@
 import { useState } from "react";
 
 interface SendMessageProps {
-  username: string;
+  receiver: string;
 }
 
-export default function SendMessage({ username }: SendMessageProps) {
+export default function SendMessage({ receiver }: SendMessageProps) {
   const [status, setStatus] = useState({
     success: true,
     message: "",
@@ -31,7 +31,7 @@ export default function SendMessage({ username }: SendMessageProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username,
+          receiver,
           content: message,
         }),
       });
@@ -66,7 +66,7 @@ export default function SendMessage({ username }: SendMessageProps) {
         {/* Header */}
         <div>
           <h2 className="text-lg text-balance text-gray-600 dark:text-gray-400 pt-6">
-            Send an anonymous message to {username}
+            Send an anonymous message to {receiver}
           </h2>
           <textarea
             value={message}
