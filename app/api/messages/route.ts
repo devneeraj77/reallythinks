@@ -1,52 +1,57 @@
-import redis from "@/lib/redis"; // Ensure Redis is configured in your app
-import { z } from "zod";
-import { NextResponse } from "next/server";
+import redis from "@/lib/redis";
 import { MessageSchema } from "@/lib/schemas/message";
+import { NextResponse } from "next/server";
+import { z } from "zod";
 
-export async function POST(req: Request) {
+// API route to handle message sending
+export const POST = async (req: Request) => {
   try {
     const body = await req.json();
 
-    // Validate the request body
+    // Validate the incoming request body
     const validatedMessage = MessageSchema.parse(body);
+    const { receiver, content, timestamp } = validatedMessage;
 
-    const { receiver, ...messageData } = validatedMessage;
-
-    // Check if the receiver exists in Redis
+    // Check if the receiver exists in Redis (user exists)
     const userExists = await redis.get(`user:${receiver}`);
     if (!userExists) {
-      return NextResponse.json(
-        { error: "Receiver not found." },
+      return new NextResponse(
+        JSON.stringify({ error: "Receiver not found." }),
         { status: 404 }
       );
     }
 
-    // Add a unique ID to the message
+    // Create the message with a unique ID
     const message = {
-      ...messageData,
       id: crypto.randomUUID(),
+      receiver,
+      content,
+      timestamp,
     };
 
-    // Save the message in Redis under the receiver's key
+    // Store the message in Redis under the receiver's key
     await redis.rpush(`messages:${receiver}`, JSON.stringify(message));
 
-    return NextResponse.json(
-      { success: true, message: "Message sent successfully!" },
+    // Respond with a success message
+    return new NextResponse(
+      JSON.stringify({ success: true, message: "Message sent successfully!" }),
       { status: 200 }
     );
   } catch (error) {
     console.error("Error in send-message API:", error);
 
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors.map((err) => err.message) },
+      // Return validation errors if Zod schema validation fails
+      return new NextResponse(
+        JSON.stringify({ error: error.errors.map((err) => err.message) }),
         { status: 400 }
       );
     }
 
-    return NextResponse.json(
-      { error: "An error occurred while sending the message." },
+    // Return a generic error message
+    return new NextResponse(
+      JSON.stringify({ error: "An error occurred while sending the message." }),
       { status: 500 }
     );
   }
-}
+};
