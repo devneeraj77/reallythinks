@@ -25,15 +25,6 @@ export const POST = async (req: Request) => {
     const { receiver, content, timestamp } = validatedMessage;
 
     // Check if the receiver exists in the database (or Redis in this case)
-    const userExists = await redis.get(`user:${receiver}`);
-
-    if (!userExists) {
-      console.error("Receiver not found:", receiver);
-      return NextResponse.json(
-        { error: "Receiver not found." },
-        { status: 404 }
-      );
-    }
 
     // Proceed with storing the message if the receiver exists
     const message = {
