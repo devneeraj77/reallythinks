@@ -40,7 +40,7 @@ export default function SendMessage({ receiver }: { receiver: string }) {
         return;
       }
 
-      const response = await fetch("/api/send-message", {
+      const response = await fetch("/api/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
