@@ -12,16 +12,18 @@ export const POST = async (req: Request) => {
     const validatedMessage = MessageSchema.parse(body);
     const { receiver, content, timestamp } = validatedMessage;
 
-    // Check if the receiver exists in Redis (user exists)
+    // Check if the receiver exists in the database (or Redis in this case)
     const userExists = await redis.get(`user:${receiver}`);
+
     if (!userExists) {
-      return new NextResponse(
-        JSON.stringify({ error: "Receiver not found." }),
+      console.error("Receiver not found:", receiver);
+      return NextResponse.json(
+        { error: "Receiver not found." },
         { status: 404 }
       );
     }
 
-    // Create the message with a unique ID
+    // Proceed with storing the message if the receiver exists
     const message = {
       id: crypto.randomUUID(),
       receiver,
