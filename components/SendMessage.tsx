@@ -1,6 +1,5 @@
 "use client";
 
-import redis from "@/lib/redis";
 import { useState } from "react";
 
 interface SendMessageProps {
