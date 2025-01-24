@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
     // Log and check if the receiver exists in Redis
     console.log("Validating receiver existence...");
-    const userExists = await redis.exists(`user:${receiver}`);
+    const userExists = await redis.get(`user:${receiver}`);
     if (!userExists) {
       console.error("Receiver not found:", receiver);
       return NextResponse.json(
