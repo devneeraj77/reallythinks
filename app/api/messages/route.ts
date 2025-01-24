@@ -1,7 +1,19 @@
-import redis from "@/lib/redis";
-import { MessageSchema } from "@/lib/schemas/message";
+import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+
+// Initialize Redis
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL!,
+  token: process.env.UPSTASH_REDIS_TOKEN!,
+});
+
+// Define the message schema
+const MessageSchema = z.object({
+  receiver: z.string(),
+  content: z.string().min(1).max(50),
+  timestamp: z.number().default(() => Date.now()),
+});
 
 // API route to handle message sending
 export const POST = async (req: Request) => {
