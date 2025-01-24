@@ -25,8 +25,8 @@ export async function POST(req: Request) {
 
     // Create a unique message ID and save it to the Redis list for the receiver
     const message = {
-      ...messageData,
-      id: crypto.randomUUID(), // Generate a unique ID for the message
+      receiver,
+      ...messageData, // Generate a unique ID for the message
     };
 
     console.log("Saving message:", message);
