@@ -1,24 +1,16 @@
-import SendMessage from "@/components/SendMessage";
-import redis from "@/lib/redis";
-
-import { notFound } from "next/navigation";
+import SendMessage from "@/components/SendMessage"; // Adjust the path as necessary
 
 export default async function UserPage({
   params,
 }: {
   params: Promise<{ username: string }>;
 }) {
-  const username = (await params).username.toLowerCase();
-
-  const userExists = await redis.exists(`user:${username}`);
-  if (!userExists) {
-    notFound();
-  }
+  const { username } = await params; // Normalize username
 
   return (
-    <div className="p-4 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold text-center">
-        Send an anonymous message to {username}
+    <div className="p-4 max-w-md mx-auto">
+      <h1 className="text-2xl font-bold mb-4 text-center">
+        Send an Anonymous Message to {username}
       </h1>
       <SendMessage receiver={username} />
     </div>
