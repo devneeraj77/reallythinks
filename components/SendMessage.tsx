@@ -1,7 +1,17 @@
-// components/SendMessage.tsx
 "use client";
 
 import { useState } from "react";
+import { z } from "zod";
+
+const MessageSchema = z.object({
+  receiver: z.string().min(1, "Receiver is required"),
+  content: z
+    .string()
+    .min(1, "Message cannot be empty")
+    .max(50, "Message cannot exceed 50 characters"),
+});
+
+type MessageData = z.infer<typeof MessageSchema>;
 
 interface SendMessageProps {
   receiver: string;
@@ -12,34 +22,36 @@ export default function SendMessage({ receiver }: SendMessageProps) {
   const [statusMessage, setStatusMessage] = useState("");
 
   const handleSendMessage = async () => {
-    if (!message.trim()) {
-      setStatusMessage("Message cannot be empty.");
-      return;
-    }
-
     try {
+      // Validate the message before sending
+      const validatedMessage: MessageData = MessageSchema.parse({
+        receiver,
+        content: message,
+      });
+
       const response = await fetch("/api/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          receiver,
-          content: message,
-        }),
+        body: JSON.stringify(validatedMessage),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage("");
+        setMessage(""); // Clear input on success
         setStatusMessage("Message sent successfully!");
       } else {
         setStatusMessage(data.error || "Failed to send the message.");
       }
     } catch (error) {
-      console.error("Error sending message:", error);
-      setStatusMessage("An error occurred. Please try again.");
+      if (error instanceof z.ZodError) {
+        setStatusMessage(error.errors[0].message); // Show first validation error
+      } else {
+        console.error("Error sending message:", error);
+        setStatusMessage("An error occurred. Please try again.");
+      }
     }
   };
 

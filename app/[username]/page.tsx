@@ -5,7 +5,7 @@ export default async function UserPage({
 }: {
   params: Promise<{ username: string }>;
 }) {
-  const username = (await params).username.toLowerCase(); // Normalize the username
+  const username = (await params).username.toLowerCase(); // Normalize username
 
   return (
     <div className="p-4 max-w-md mx-auto">
