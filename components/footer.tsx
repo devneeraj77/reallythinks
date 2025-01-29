@@ -18,6 +18,8 @@ export default function Footer() {
       <div className="flex items-center justify-start gap-2">
         <Image
           className="size-5"
+          width={200}
+          height={200}
           src="https://authjs.dev/img/logo-sm.png"
           alt="Auth.js Logo"
         />
