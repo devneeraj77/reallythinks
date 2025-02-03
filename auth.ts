@@ -3,6 +3,14 @@ import "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter";
 import redis from "./lib/redis";
+import { z } from "zod";
+
+const CredentialsSchema = z.object({
+  email: z.string().email("Invalid email format"),
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  name: z.string().min(1, "Name is required"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: !!process.env.AUTH_DEBUG,
@@ -26,12 +34,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         name: { label: "Name", type: "text", placeholder: "Your Full Name" },
         password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials) => {
-        if (!credentials) {
-          throw new Error("Missing credentials");
+      authorize: async (credentials: unknown) => {
+        // Validate credentials using the Zod schema
+        const parsedCredentials = CredentialsSchema.safeParse(credentials);
+
+        if (!parsedCredentials.success) {
+          // If validation fails, throw an error with the validation issues
+          throw new Error(
+            parsedCredentials.error.errors.map((err) => err.message).join(", ")
+          );
         }
 
-        const { email, username, name, password } = credentials;
+        const { email, username, name, password } = parsedCredentials.data;
 
         // Fetch user from Redis
         const user = await redis.hgetall(`user:${username}`);
@@ -55,8 +69,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return { id: newUser.id, email: newUser.email, name: newUser.name };
         }
 
-        // If password is invalid, return null
-        // return null
+        // If password is invalid, return null or an error (based on your preference)
         return user;
       },
     }),
