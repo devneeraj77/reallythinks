@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 
 async function getUser(username: string) {
   // Check if the user exists in Redis
-  const userExists = await redis.exists(username);
+  const userExists = await redis.exists(`user:${username}`);
 
   // Return the username if found, otherwise return null
   return userExists ? username : null;
