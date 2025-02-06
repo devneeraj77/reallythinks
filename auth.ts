@@ -65,7 +65,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             password, // Note: Hash passwords in production!
           };
 
-          await redis.hset(`user:${email}`, newUser);
+          await redis.hset(`user:${username}`, newUser);
           return { id: newUser.id, email: newUser.email, name: newUser.name };
         }
 
