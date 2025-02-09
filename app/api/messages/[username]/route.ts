@@ -1,13 +1,7 @@
 import { NextResponse } from "next/server";
 import redis from "@/lib/redis"; // Ensure you have Upstash Redis configured
 import { z } from "zod";
-
-// Define Zod schema for message validation
-const MessageSchema = z.object({
-  content: z.string(),
-  timestamp: z.string(),
-  receiver: z.string(),
-});
+import { MessageSchema } from "@/lib/schemas/message";
 
 // Fetch messages for a specific user
 export async function GET(
