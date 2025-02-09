@@ -1,7 +1,8 @@
-import { z } from "zod";
+import { string, z } from "zod";
 
-// User schema for registration
+// User schema for signup ===> registration
 export const userRegistrationSchema = z.object({
+  name: z.string(),
   username: z
     .string()
     .min(3, "Username must be at least 3 characters")

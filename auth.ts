@@ -75,13 +75,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   basePath: "/auth",
-  pages: {
-    signIn: "/signin",
-    // signOut: "/auth/signout",
-    error: "/auth/error",
-    verifyRequest: "/auth/verify-request",
-    newUser: "/new-user",
-  },
   session: { strategy: "jwt" },
   callbacks: {
     authorized({ request, auth }) {
