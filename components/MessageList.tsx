@@ -2,30 +2,28 @@
 
 import { useEffect, useState } from "react";
 
-type Message = {
-  content: string;
-  timestamp: string;
+interface Message {
   receiver: string;
-};
+  content: string;
+  timestamp: number;
+}
 
 export default function MessageList({ username }: { username: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch(`/api/messages/${username}`);
-        const data = await response.json();
+        const res = await fetch(`/api/messages/fetch-message${username}`);
+        if (!res.ok) throw new Error("Failed to fetch messages");
 
-        if (response.ok) {
-          setMessages(data.messages || []);
-        } else {
-          setError(data.error || "Error fetching messages");
-        }
+        const data = await res.json();
+        setMessages(data.messages);
       } catch (err) {
-        setError("Failed to fetch messages");
+        console.error("Error fetching messages:", err);
+        setError("Error fetching messages. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -34,42 +32,25 @@ export default function MessageList({ username }: { username: string }) {
     fetchMessages();
   }, [username]);
 
-  if (loading)
-    return <div className="text-center text-gray-600">Loading...</div>;
-  if (error) return <div className="text-center text-red-600">{error}</div>;
+  if (loading) return <p>Loading messages...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="overflow-x-auto bg-gray-100 dark:bg-gray-800 rounded-md mt-6 px-3 py-2 w-full">
-      <h2 className="text-lg text-gray-600 dark:text-gray-400 pb-2">
-        Messages
-      </h2>
-      {messages.length > 0 ? (
-        <table className="table-auto w-full border-collapse">
-          <thead>
-            <tr>
-              <th className="font-semibold w-1/3 text-left">receiver</th>
-              <th className="font-semibold w-1/3 text-left">Message</th>
-              <th className="font-semibold w-1/3 text-left">Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {messages.map((message, index) => (
-              <tr key={index}>
-                <td className="text-gray-600 dark:text-gray-400">
-                  {message.receiver}
-                </td>
-                <td className="text-gray-600 dark:text-gray-400">
-                  {message.content}
-                </td>
-                <td className="text-gray-600 dark:text-gray-400">
-                  {new Date(message.timestamp).toLocaleString()}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+      <h2 className="text-lg font-semibold mb-2">Messages</h2>
+      {messages.length === 0 ? (
+        <p>No messages found.</p>
       ) : (
-        <div className="text-center text-gray-600">No messages found.</div>
+        <ul className="space-y-2">
+          {messages.map((msg, index) => (
+            <li key={index} className="p-2 bg-white dark:bg-gray-700 rounded-md">
+              <p className="text-gray-800 dark:text-gray-300">{msg.content}</p>
+              <p className="text-sm text-gray-500">
+                Sent: {new Date(msg.timestamp).toLocaleString()}
+              </p>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );

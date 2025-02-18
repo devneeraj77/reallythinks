@@ -88,7 +88,7 @@ export const providerMap = providers
 export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: !!process.env.AUTH_DEBUG,
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
-  adapter: UpstashRedisAdapter(redis),
+  adapter: UpstashRedisAdapter(redis, { baseKeyPrefix: "app2:" }),
   providers,
   basePath: "/auth",
   pages: {
@@ -105,8 +105,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (pathname === "/middleware-example") return !!auth;
       return true;
     },
-    jwt({ token, trigger, session, account }) {
+    async jwt({ token, trigger, session, profile, account }) {
       if (trigger === "update") token.name = session.user.name;
+      if (profile) {
+        
+      }
       if (account?.provider === "keycloak") {
         return { ...token, accessToken: account.access_token };
       }

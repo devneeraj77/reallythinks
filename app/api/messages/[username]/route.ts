@@ -1,33 +1,33 @@
 import { NextResponse } from "next/server";
-import redis from "@/lib/redis"; // Ensure you have Upstash Redis configured
+import redis from "@/lib/redis";
 import { z } from "zod";
-import { MessageSchema } from "@/lib/schemas/message";
 
-// Fetch messages for a specific user
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ username: string }> }
-) {
+// Zod validation schema
+const MessageSchema = z.object({
+  receiver: z.string(),
+  content: z.string(),
+  timestamp: z.number(),
+});
+
+export async function GET(request: Request, { params }: { params: Promise<{ username: string }> }) {
   try {
-    const username = params;
+    const  username  = (await params).username;
 
-    // Fetch messages list from Redis for the given username
     const messages = await redis.lrange(`messages:${username}`, 0, -1);
-
     if (!messages || messages.length === 0) {
       return NextResponse.json({ messages: [] }, { status: 200 });
     }
 
-    // Parse messages safely (no need to use JSON.parse if they are stored as objects)
     const parsedMessages = messages
       .map((msg) => {
         try {
-          return MessageSchema.parse(JSON.parse(msg));
+          return MessageSchema.parse(msg);
         } catch (error) {
-          return null; // Skip invalid messages
+          console.error("Invalid message format:", error);
+          return null;
         }
       })
-      .filter(Boolean); // Remove null values
+      .filter(Boolean);
 
     return NextResponse.json({ messages: parsedMessages }, { status: 200 });
   } catch (error) {
