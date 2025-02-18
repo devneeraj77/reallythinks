@@ -16,7 +16,7 @@ export default function MessageList({ username }: { username: string }) {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await fetch(`/api/messages/fetch-message${username}`);
+        const res = await fetch(`/api/messages/fetch-message?username=${username}`);
         if (!res.ok) throw new Error("Failed to fetch messages");
 
         const data = await res.json();
