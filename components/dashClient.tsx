@@ -2,9 +2,12 @@
 
 import { useSession } from "next-auth/react";
 import MessageList from "@/components/MessageList";
+import { useState } from "react";
+import InstaStoryShare from "./InstaStoryShare";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
+  const [selectedMessage, setSelectedMessage] = useState<string | null>(null);
 
   if (status === "loading") {
     return <p>Loading your dashboard...</p>;
@@ -23,7 +26,13 @@ export default function Dashboard() {
       <p className="mb-6">
         Welcome, {username}! Here are your anonymous messages:
       </p>
-      <MessageList username={username} />
+      <MessageList username={username}  onSelectMessage={setSelectedMessage} />
+      {selectedMessage && (
+        <div className="mt-8">
+          <h2 className="text-lg font-semibold mb-2">Instagram Story Reply</h2>
+          <InstaStoryShare username={username} message={selectedMessage} />
+        </div>
+      )}
     </main>
   );
 }

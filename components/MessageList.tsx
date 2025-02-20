@@ -8,22 +8,29 @@ interface Message {
   timestamp: number;
 }
 
-export default function MessageList({ username }: { username: string }) {
+interface MessageListProps {
+  username: string;
+  onSelectMessage: (message: string) => void;
+}
+
+export default function MessageList({ username, onSelectMessage }: MessageListProps) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await fetch(`/api/messages/fetch-message?username=${username}`);
-        if (!res.ok) throw new Error("Failed to fetch messages");
-
+        const res = await fetch(`/api/messages/${username}`);
         const data = await res.json();
-        setMessages(data.messages);
+        
+        if (res.ok) {
+          setMessages(data.messages || []);
+        } else {
+          setError(data.error || "Failed to fetch messages.");
+        }
       } catch (err) {
-        console.error("Error fetching messages:", err);
-        setError("Error fetching messages. Please try again.");
+        setError("An error occurred while fetching messages.");
       } finally {
         setLoading(false);
       }
@@ -36,21 +43,23 @@ export default function MessageList({ username }: { username: string }) {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-      <h2 className="text-lg font-semibold mb-2">Messages</h2>
+    <div className="mt-8">
       {messages.length === 0 ? (
         <p>No messages found.</p>
       ) : (
-        <ul className="space-y-2">
-          {messages.map((msg, index) => (
-            <li key={index} className="p-2 bg-white dark:bg-gray-700 rounded-md">
-              <p className="text-gray-800 dark:text-gray-300">{msg.content}</p>
-              <p className="text-sm text-gray-500">
-                Sent: {new Date(msg.timestamp).toLocaleString()}
-              </p>
-            </li>
+        <div className="space-y-4">
+          {messages.map((msg) => (
+            <div
+              key={msg.timestamp}
+              className="bg-white p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-100"
+              onClick={() => onSelectMessage(msg.content)}
+            >
+              <p className="font-semibold">Anonymous Message:</p>
+              <p>{msg.content}</p>
+              <p className="text-sm text-gray-500 mt-2">{new Date(msg.timestamp).toLocaleString()}</p>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
