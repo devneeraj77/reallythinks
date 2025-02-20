@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { SignIn, SignOut } from "./auth-components";
+import Link from "next/link";
 
 export default async function UserButton() {
   const session = await auth();
@@ -43,6 +44,7 @@ export default async function UserButton() {
               <p className="text-muted-foreground text-xs leading-none">
                 {session.user.email}
               </p>
+              <Link href={"/dashboard"} >Dashboard</Link>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuItem>
