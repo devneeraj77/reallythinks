@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 interface InstaStoryShareProps {
@@ -18,33 +19,74 @@ export default function InstaStoryShare({ message, username }: InstaStorySharePr
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Set canvas size
+    // Set canvas size (Instagram Story size)
     canvas.width = 1080;
     canvas.height = 1920;
 
     // Background gradient
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, "#ff7eb3");
-    gradient.addColorStop(1, "#ff758c");
+    gradient.addColorStop(0, "#3C6E71");
+    gradient.addColorStop(1, "#284B63");
 
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Message text
+    // Title text
     ctx.fillStyle = "#ffffff";
     ctx.font = "bold 60px Arial";
     ctx.textAlign = "center";
     ctx.fillText("Someone thinks about you!", canvas.width / 2, 400);
 
-    ctx.font = "italic 50px Arial";
-    ctx.fillText(`"${message}"`, canvas.width / 2, 600);
+    // Message Box Properties
+    const boxX = 100;
+    const boxY = 500;
+    const boxWidth = 880;
+    const maxTextWidth = 780; // Keep text inside the box
+    let boxHeight = 200; // Default height, adjusted based on text
 
-    ctx.font = "bold 40px Arial";
-    ctx.fillText(`@${username}`, canvas.width / 2, 800);
+    // Function to wrap text inside the message box
+    function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, lineHeight: number) {
+      const words = text.split(" ");
+      let line = "";
+      const lines: string[] = [];
+
+      words.forEach((word) => {
+        const testLine = line + word + " ";
+        const testWidth = ctx.measureText(testLine).width;
+        if (testWidth > maxWidth && line !== "") {
+          lines.push(line);
+          line = word + " ";
+        } else {
+          line = testLine;
+        }
+      });
+
+      lines.push(line);
+      return lines;
+    }
+
+    const wrappedText = wrapText(ctx, message, maxTextWidth, 70);
+    boxHeight = Math.max(400, wrappedText.length * 80 + 80); // Adjust box height based on text lines
+
+    // Center the message vertically
+    const textStartY = boxY + (boxHeight - wrappedText.length * 70) / 2 + 40;
+
+    // Draw anonymous message box with adjusted height
+    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+    ctx.roundRect(boxX, boxY, boxWidth, boxHeight, 40);
+    ctx.fill();
+
+    // Message text inside the box (centered)
+    ctx.font = "italic 50px Arial";
+    ctx.fillStyle = "#242424";
+    wrappedText.forEach((line, i) => {
+      ctx.fillText(line, canvas.width / 2, textStartY + i * 70);
+    });
 
     // Branding text
     ctx.font = "30px Arial";
-    ctx.fillText("Reply anonymously on reallythinks.vercel.app", canvas.width / 2, 1200);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("Reply anonymously", canvas.width / 2, boxY + boxHeight + 100);
 
     // Convert canvas to image URL
     setImageUrl(canvas.toDataURL("image/png"));
@@ -78,7 +120,7 @@ export default function InstaStoryShare({ message, username }: InstaStorySharePr
       <canvas ref={canvasRef} className="hidden" />
 
       {imageUrl && (
-        <img src={imageUrl} alt="Instagram Story Preview" className="mt-4 rounded-lg shadow-lg w-60" />
+        <Image src={imageUrl} alt="Instagram Story Preview" className="mt-4 rounded-lg shadow-lg w-60" />
       )}
 
       <button

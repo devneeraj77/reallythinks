@@ -12,6 +12,11 @@ const nextConfig = {
         hostname: "authjs.dev",
         pathname: "/img/**", // Allow all images under /img/
       },
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com",
+        pathname: "/**",
+      },
     ],
   },
 };

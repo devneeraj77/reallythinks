@@ -16,11 +16,8 @@ export default function InstaStoryTemplate({
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Default avatar if profileImage is missing
-  const defaultProfileImage = `https://api.dicebear.com/9.x/thumbs/svg?seed=${Math.floor(
-    Math.random() * 100000
-  ) + 1}&randomizeIds=true`;
 
-  const finalProfileImage = profileImage || defaultProfileImage;
+  const finalProfileImage = profileImage ;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -92,16 +89,6 @@ export default function InstaStoryTemplate({
       <h2 className="text-lg font-semibold">📸 Share on Instagram Story</h2>
 
       <canvas ref={canvasRef} className="hidden" />
-
-      {/* Profile Image (Displays Directly) */}
-      <Image
-        src={finalProfileImage}
-        alt="Profile Avatar"
-        width={180}
-        height={180}
-        className="mt-4 rounded-full shadow-lg"
-      />
-
       {/* Instagram Story Preview */}
       {imageUrl && (
         <Image
