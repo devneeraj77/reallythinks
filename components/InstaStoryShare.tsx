@@ -1,5 +1,6 @@
 "use client";
 
+import { IconScreenshot } from "@tabler/icons-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -88,47 +89,50 @@ export default function InstaStoryShare({ message, username }: InstaStorySharePr
     ctx.fillStyle = "#ffffff";
     ctx.fillText("Reply anonymously", canvas.width / 2, boxY + boxHeight + 100);
 
-    // Convert canvas to image URL
-    setImageUrl(canvas.toDataURL("image/png"));
+    // Generate image URL and set it
+    const finalImageUrl = canvas.toDataURL("image/png");
+    setImageUrl(finalImageUrl);
   }, [message, username]);
 
-  const handleShare = () => {
+  const handleShareAndDownload = () => {
     if (!imageUrl) return;
 
-    // Convert Image URL to Blob
-    fetch(imageUrl)
-      .then((res) => res.blob())
-      .then((blob) => {
-        const file = new File([blob], "insta-story.png", { type: "image/png" });
-        const data = new FormData();
-        data.append("file", file);
+    // Open Instagram Story creation page
+    const instaUrl = "https://www.instagram.com/create/story/";
+    window.open(instaUrl, "_blank");
 
-        // Open Instagram Story with the image
-        const instaUrl = "https://www.instagram.com/create/story/";
-        const link = document.createElement("a");
-        link.href = instaUrl;
-        link.target = "_blank";
-        link.click();
-      })
-      .catch((err) => console.error("Error creating image blob:", err));
+    // Download Image Automatically with username in filename
+    const link = document.createElement("a");
+    link.href = imageUrl;
+    link.download = `insta-story-${username}.png`;
+    link.click();
   };
 
   return (
     <div className="flex flex-col items-center justify-center p-6">
-      <h2 className="text-lg font-semibold">📸 Share on Instagram Story</h2>
+      <h2 className="text-lg font-semibold flex gap-2 justiy-center align-center"> <IconScreenshot /> Share on Instagram Story</h2>
 
       <canvas ref={canvasRef} className="hidden" />
 
       {imageUrl && (
-        <Image src={imageUrl} alt="Instagram Story Preview" className="mt-4 rounded-lg shadow-lg w-60" />
+        <Image
+          src={imageUrl}
+          height={500}
+          width={200}
+          alt={`Instagram Story Preview for ${username}`}
+          className="mt-4 rounded-lg shadow-lg w-60"
+        />
       )}
 
-      <button
-        onClick={handleShare}
-        className="mt-4 bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition"
-      >
-        Share on Instagram Story
-      </button>
+      {/* Single button to share & download */}
+      {imageUrl && (
+        <button
+          onClick={handleShareAndDownload}
+          className="mt-4 bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition"
+        >
+          Share & Download Story
+        </button>
+      )}
     </div>
   );
 }

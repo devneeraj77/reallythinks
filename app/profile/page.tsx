@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { SignIn } from "@/components/auth-components";
-import ProfilePreview from "@/components/ProfileLinkPreview";
+import ProfileLinkPreview from "@/components/ProfileLinkPreview";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 export default async function UserButton() {
@@ -37,7 +37,7 @@ export default async function UserButton() {
       </div>
 
       {/* Pass the extracted username and profile image */}
-      <ProfilePreview username={username} profileImage={profileImage} />
+      <ProfileLinkPreview username={username} profileImage={profileImage} />
     </main>
   );
 }
