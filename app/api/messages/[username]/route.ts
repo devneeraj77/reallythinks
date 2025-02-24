@@ -1,40 +1,43 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+import { Message } from "@/lib/schemas/message";
 import redis from "@/lib/redis";
-import { z } from "zod";
 
-// Zod validation schema
-const MessageSchema = z.object({
-  receiver: z.string(),
-  content: z.string(),
-  timestamp: z.number(),
-});
+type Params = Promise<{ username: string }>
 
-export async function GET(request: Request, { params }: { params: Promise<{ username: string }> }) {
+export async function GET(request: NextRequest, segmentData: { params: Params }) {
+  const params = await segmentData.params
+  const  username = params.username;
   try {
-    const  username  = (await params).username;
+    const messages = await redis.lrange<Message>(`messages:${username}`, 0, -1);
 
-    const messages = await redis.lrange(`messages:${username}`, 0, -1);
-    if (!messages || messages.length === 0) {
-      return NextResponse.json({ messages: [] }, { status: 200 });
-    }
+    // Sort messages by recent timestamp (newest first)
+    const sortedMessages = messages.sort((a, b) => b.timestamp - a.timestamp);
 
-    const parsedMessages = messages
-      .map((msg) => {
-        try {
-          return MessageSchema.parse(msg);
-        } catch (error) {
-          console.error("Invalid message format:", error);
-          return null;
-        }
-      })
-      .filter(Boolean);
-
-    return NextResponse.json({ messages: parsedMessages }, { status: 200 });
+    return NextResponse.json(sortedMessages);
   } catch (error) {
-    console.error("Error fetching messages:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch messages" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch messages" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest, segmentData: { params: Params }) {
+  const params = await segmentData.params
+  const  username = params.username;
+  try {
+    const { timestamp } = await request.json();
+
+    // Fetch all messages
+    const messages: Message[] = await redis.lrange(`messages:${username}`, 0, -1);
+
+    // Find and remove the message by timestamp
+    const updatedMessages = messages.filter((msg) => msg.timestamp !== timestamp);
+
+    // Reset list in Redis
+    await redis.del(`messages:${username}`);
+    await redis.rpush(`messages:${username}`, ...updatedMessages);
+
+    return NextResponse.json({ message: "Message deleted successfully" });
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to delete message" }, { status: 500 });
   }
 }

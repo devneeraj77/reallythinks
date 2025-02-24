@@ -6,6 +6,7 @@ export const MessageSchema = z.object({
   receiver: z.string(),
   content: z.string().min(1).max(50),
   timestamp: z.number().default(() => Date.now()),
+  
 });
 
 export type Message = z.infer<typeof MessageSchema>;

@@ -26,7 +26,7 @@ export default function Dashboard() {
       <p className="mb-6">
         Welcome, {username}! Here are your anonymous messages:
       </p>
-      <MessageList username={username}  onSelectMessage={setSelectedMessage} />
+      <MessageList username={username}   />
       {selectedMessage && (
         <div className="mt-8">
           <h2 className="text-lg font-semibold mb-2">Instagram Story Reply</h2>
