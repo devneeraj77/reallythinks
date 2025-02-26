@@ -9,7 +9,10 @@ interface InstaStoryShareProps {
   username: string;
 }
 
-export default function InstaStoryShare({ message, username }: InstaStoryShareProps) {
+export default function InstaStoryShare({
+  message,
+  username,
+}: InstaStoryShareProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -26,8 +29,8 @@ export default function InstaStoryShare({ message, username }: InstaStorySharePr
 
     // Background gradient
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, "#3C6E71");
-    gradient.addColorStop(1, "#284B63");
+    gradient.addColorStop(0, "#3E6259");
+    gradient.addColorStop(1, "#212922");
 
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -46,7 +49,12 @@ export default function InstaStoryShare({ message, username }: InstaStorySharePr
     let boxHeight = 200; // Default height, adjusted based on text
 
     // Function to wrap text inside the message box
-    function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, lineHeight: number) {
+    function wrapText(
+      ctx: CanvasRenderingContext2D,
+      text: string,
+      maxWidth: number,
+      lineHeight: number
+    ) {
       const words = text.split(" ");
       let line = "";
       const lines: string[] = [];
@@ -78,7 +86,7 @@ export default function InstaStoryShare({ message, username }: InstaStorySharePr
     ctx.fill();
 
     // Message text inside the box (centered)
-    ctx.font = "italic 50px Arial";
+    ctx.font = "50px Arial";
     ctx.fillStyle = "#242424";
     wrappedText.forEach((line, i) => {
       ctx.fillText(line, canvas.width / 2, textStartY + i * 70);
@@ -110,7 +118,10 @@ export default function InstaStoryShare({ message, username }: InstaStorySharePr
 
   return (
     <div className="flex flex-col items-center justify-center p-6">
-      <h2 className="text-lg font-semibold flex gap-2 justiy-center align-center"> <IconScreenshot /> Share on Instagram Story</h2>
+      <h2 className="text-lg font-semibold flex gap-2 justiy-center align-center">
+        {" "}
+        <IconScreenshot /> Share on Instagram Story
+      </h2>
 
       <canvas ref={canvasRef} className="hidden" />
 

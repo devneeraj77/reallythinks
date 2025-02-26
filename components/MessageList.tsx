@@ -1,8 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { IconRefresh, IconShare, IconTrash } from "@tabler/icons-react";
+import {
+  IconRefresh,
+  IconScreenshot,
+  IconShare,
+  IconTrash,
+} from "@tabler/icons-react";
 import InstaStoryShare from "./InstaStoryShare";
+import { Chip } from "@heroui/chip";
 
 interface Message {
   receiver: string;
@@ -20,7 +26,7 @@ export default function MessageList({ username }: MessageListProps) {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
 
-  // ✅ Optimized fetchMessages with useCallback
+  //  Optimized fetchMessages with useCallback
   const fetchMessages = useCallback(async () => {
     if (!username) return;
 
@@ -32,7 +38,9 @@ export default function MessageList({ username }: MessageListProps) {
 
       setMessages((prev) => {
         const sortedMessages = data.sort((a, b) => b.timestamp - a.timestamp);
-        return JSON.stringify(prev) !== JSON.stringify(sortedMessages) ? sortedMessages : prev;
+        return JSON.stringify(prev) !== JSON.stringify(sortedMessages)
+          ? sortedMessages
+          : prev;
       });
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -48,7 +56,7 @@ export default function MessageList({ username }: MessageListProps) {
     return () => clearInterval(interval);
   }, [fetchMessages]);
 
-  // ✅ Optimized handleDelete with useCallback
+  //  Optimized handleDelete with useCallback
   const handleDelete = useCallback(
     async (timestamp: number) => {
       try {
@@ -59,7 +67,9 @@ export default function MessageList({ username }: MessageListProps) {
         });
 
         if (!res.ok) throw new Error("Failed to delete message");
-        setMessages((prev) => prev.filter((msg) => msg.timestamp !== timestamp));
+        setMessages((prev) =>
+          prev.filter((msg) => msg.timestamp !== timestamp)
+        );
       } catch (error) {
         console.error("Error deleting message:", error);
       }
@@ -74,13 +84,15 @@ export default function MessageList({ username }: MessageListProps) {
   };
 
   return (
-    <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+    <div className="p-4 bg-[#C2EFB3] text-balance text-[#233329] dark:text-gray-400 rounded-lg shadow-md ">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Messages</h2>
         <button
           onClick={fetchMessages}
           disabled={refreshing}
-          className={`p-2 rounded-full transition ${refreshing ? "animate-spin" : "hover:bg-gray-200"}`}
+          className={`p-2 rounded-full transition ${
+            refreshing ? "animate-spin" : "hover:bg-gray-200"
+          }`}
         >
           <IconRefresh className="w-6 h-6 text-gray-600" />
         </button>
@@ -91,27 +103,37 @@ export default function MessageList({ username }: MessageListProps) {
       ) : messages.length === 0 ? (
         <p className="text-gray-500">No messages found.</p>
       ) : (
-        <ul className="space-y-3">
+        <ul className="space-y-3  border-blue-200">
           {messages.map((msg) => (
-            <li key={msg.timestamp} className="p-3 bg-white rounded-lg shadow-sm flex justify-between items-center animate-fade-in">
-              <div>
-                <p className="text-gray-800">{msg.content}</p>
-                <span className="text-xs text-gray-500">{getTimeAgo(msg.timestamp)}</span>
+            <li
+              key={msg.timestamp}
+              className="p-3 text-[#212922]  bg-white rounded-lg shadow-sm flex sm:flex-row flex-col  animate-fade-in"
+            >
+              <div className="flex-1  ">
+                <p>{msg.content}</p>
+                <span className="text-xs py-2">
+                  {getTimeAgo(msg.timestamp)}
+                </span>
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex jusitify-center items-center gap-3  border-blue-200">
                 <button
                   onClick={() => setSelectedMessage(msg)}
-                  className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition flex items-center"
+                  className=" px-3  border-blue-200 w-full py-1 rounded-md"
                 >
-                  <IconShare className="w-5 h-5 mr-1" /> Share
+                  {/* <IconShare className="w-5 h-5 mr-1" /> Share */}
+                  <Chip color="warning" variant="flat">
+                    <IconScreenshot className="w-5 h-5 m-1 text-[#212922]" />
+                    {/* <IconTrash className="w-5 h-5 mr-1 text-red-500 hover:text-red-600 transition flex items-center " /> */}
+                  </Chip>
                 </button>
-
                 <button
                   onClick={() => handleDelete(msg.timestamp)}
-                  className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition flex items-center"
+                  className=" px-3 py-1  border-blue-200 w-full rounded-md "
                 >
-                  <IconTrash className="w-5 h-5 mr-1" /> Delete
+                  <Chip color="warning" variant="flat">
+                    <IconTrash className="w-5 h-5 m-1 text-red-500 hover:text-red-600 transition flex items-center " />
+                  </Chip>
                 </button>
               </div>
             </li>
@@ -121,7 +143,10 @@ export default function MessageList({ username }: MessageListProps) {
 
       {selectedMessage && (
         <div className="mt-6">
-          <InstaStoryShare message={selectedMessage.content} username={username} />
+          <InstaStoryShare
+            message={selectedMessage.content}
+            username={username}
+          />
         </div>
       )}
     </div>
