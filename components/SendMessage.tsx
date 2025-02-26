@@ -19,6 +19,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
   const [message, setMessage] = useState("");
   const [messageCount, setMessageCount] = useState(0); // Track number of messages sent in the last 24 hours
   const [timeRemaining, setTimeRemaining] = useState(0); // Track remaining time for re-sending messages
+  const [timeRemainingInSeconds, setTimeRemainingInSeconds] = useState(0); // Track remaining time in seconds for message limit
 
   // Check cookie for message count and last sent time
   useEffect(() => {
@@ -35,7 +36,12 @@ export default function SendMessage({ receiver }: SendMessageProps) {
       if (timeDiff < 24 * 60 * 60 * 1000) {
         // If within 24 hours
         setMessageCount(parsedSentCount);
-        setTimeRemaining(Math.ceil((24 * 60 * 60 * 1000 - timeDiff) / 1000)); // Time remaining for next message
+        setTimeRemaining(
+          Math.ceil((24 * 60 * 60 * 1000 - timeDiff) / (60 * 1000))
+        ); // Time remaining for next message in minutes
+        setTimeRemainingInSeconds(
+          Math.ceil((24 * 60 * 60 * 1000 - timeDiff) / 1000)
+        ); // Time remaining in seconds for message limit
       } else {
         // Reset message count if more than 24 hours
         setMessageCount(0);
@@ -49,9 +55,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
     if (messageCount >= 2) {
       setStatus({
         success: false,
-        message: `You can only send 2 messages within 24 hours. Please wait ${
-          timeRemaining / (60 * 60)
-        } hours & minutes.`,
+        message: `You can only send 2 messages within 24 hours. Please wait ${timeRemaining} minutes.`,
       });
       return;
     }
@@ -146,12 +150,12 @@ export default function SendMessage({ receiver }: SendMessageProps) {
           )}
 
           {/* Display warning when there's a time limit */}
-          {messageCount >= 2 && timeRemaining > 0 && (
+          {messageCount >= 2 && timeRemainingInSeconds > 0 && (
             <div className="mt-4">
               <Alert
                 color="warning"
                 title="Message Limit Reached"
-                description={`Please wait ${timeRemaining} seconds to send another message.`}
+                description={`Please wait ${timeRemainingInSeconds} seconds to send another message.`}
               />
             </div>
           )}
