@@ -1,11 +1,11 @@
-// In your SignUp page component
 "use client";
-// Import the Zod schema
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { UserSignupSchema } from "@/lib/schemas/userSchema";
 import Link from "next/link";
+import { Input } from "@heroui/input";
+import { Button } from "@heroui/button";
 
 export default function SignUpPage() {
   const [username, setUsername] = useState("");
@@ -14,9 +14,21 @@ export default function SignUpPage() {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const errors: any[] = [];
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  if (password.length < 4) {
+    errors.push("Password must be 4 characters or more.");
+  }
+  if ((password.match(/[A-Z]/g) || []).length < 1) {
+    errors.push("Password must include at least 1 upper case letter");
+  }
+  if ((password.match(/[^a-z]/gi) || []).length < 1) {
+    errors.push("Password must include at least 1 symbol.");
+  }
+
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setError("");
 
     try {
@@ -41,85 +53,102 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
-        <h2 className="text-2xl font-semibold mb-4">Sign Up</h2>
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen flex justify-center items-center">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm border-1">
+        <h2 className="text-2xl font-semibold mb-4 text-[#5B8266]">Sign Up</h2>
+        {error && <p className="text-red-500 text-xs mb-4">{error}</p>}
+        <form
+          onSubmit={onSubmit}
+          className="space-y-4 flex flex-col gap-2 max-w-md"
+        >
           <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Full Name
-            </label>
-            <input
-              type="text"
-              id="name"
+            <Input
+              isRequired
+              label="Name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Username
-            </label>
-            <input
+              onValueChange={setName}
+              labelPlacement="outside"
+              name="name"
               type="text"
-              id="username"
+              placeholder="Enter your name"
+              errorMessage={error && !name ? "Please enter your name" : ""}
+              classNames={{ input: "border-[#3E6259]" }}
+            />
+          </div>
+
+          <div>
+            <Input
+              isRequired
+              label="Username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              onValueChange={setUsername}
+              labelPlacement="outside"
+              name="username"
+              type="text"
+              placeholder="Enter your username"
+              errorMessage={error && !username ? "Please enter a username" : ""}
+              classNames={{ input: "border-[#3E6259]" }}
             />
           </div>
+
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
+            <Input
+              isRequired
+              errorMessage={({ validationDetails }) => {
+                if (validationDetails.valueMissing) {
+                  return "Please enter your email";
+                }
+                if (validationDetails.typeMismatch) {
+                  return "Please enter a valid email address";
+                }
+              }}
+              label="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              onValueChange={setEmail}
+              labelPlacement="outside"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              classNames={{ input: "border-[#3E6259]" }}
             />
           </div>
+
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
+            <Input
+              isRequired
+              errorMessage={() => (
+                <ul>
+                  {errors.map((error, i) => (
+                    <li key={i}>{error}</li>
+                  ))}
+                </ul>
+              )}
+              isInvalid={errors.length > 0}
+              label="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              onValueChange={setPassword}
+              labelPlacement="outside"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              classNames={{ input: "border-[#3E6259]" }}
             />
           </div>
-          <button
+
+          <Button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="bg-[#212922] text-[#5B8266]"
+            variant="flat"
           >
             Sign Up
-          </button>
+          </Button>
         </form>
         <p className="mt-4 text-sm text-center">
           Already have an account?{" "}
-          <Link href="/auth/signin" className="text-blue-600 hover:underline">
+          <Link
+            href="/auth/signin"
+            className="text-[#5B8266] active:hover:text-[#212922] underline"
+          >
             Sign in
           </Link>
         </p>

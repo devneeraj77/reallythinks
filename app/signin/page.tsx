@@ -2,6 +2,9 @@ import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 import { providerMap, signIn } from "@/auth";
 import redis from "@/lib/redis";
+import { Input } from "@heroui/input";
+import { Button } from "@heroui/button";
+import Link from "next/link";
 
 export default async function SignInPage({
   searchParams: searchParamsPromise,
@@ -19,6 +22,7 @@ export default async function SignInPage({
 
     try {
       // Fetch user from Redis
+
       const user = await redis.hgetall(`user:${username}`);
 
       if (user && user.password === password) {
@@ -35,55 +39,56 @@ export default async function SignInPage({
       }
     } catch (error) {
       if (error instanceof AuthError) {
-        return redirect(`/new-user?error=${error.type}`);
+        return;
       }
       throw error;
     }
   };
 
   return (
-    <div className="flex flex-col border gap-2 p-4 w-80 mx-auto mt-10">
-      <h2 className="text-xl font-semibold">Sign In</h2>
+    <div className="flex flex-col border-1 gap-2 p-4 w-80 rounded-lg mx-auto mt-10">
+      <h2 className="text-xl font-semibold text-[#5B8266]">Sign In</h2>
 
       {/* Sign-in Form with Credentials */}
-      <form className="flex flex-col gap-2" action={handleSignIn}>
-        <label htmlFor="username" className="font-medium">
-          Username
-        </label>
-        <input
-          type="text"
+      <form
+        className="flex text-[#212922] flex-col gap-2"
+        action={handleSignIn}
+      >
+        <Input
+          isRequired
+          errorMessage="Please enter a valid username"
+          label="Username"
+          labelPlacement="outside"
           name="username"
-          id="username"
-          className="border p-2 rounded-md"
-          required
+          placeholder="Enter your username"
+          type="text"
         />
 
-        <label htmlFor="password" className="font-medium">
-          Password
-        </label>
-        <input
-          type="password"
+        <Input
+          isRequired
+          errorMessage="Please enter a valid username"
+          label="Password"
+          labelPlacement="outside"
           name="password"
-          id="password"
-          className="border p-2 rounded-md"
-          required
+          placeholder="Enter your password"
+          type="password"
         />
 
-        <button
+        <Button
           type="submit"
-          className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+          variant="flat"
+          className="bg-[#212922] mt-2 text-[#5B8266]"
         >
           Sign In with Credentials
-        </button>
+        </Button>
       </form>
-
       {/* Sign-in with Providers (Fixed `key` error) */}
-      <div className="mt-4">
-        <p className="text-center text-sm">Or sign in with</p>
+      <div className="my-2">
+        {/* <p className="text-center text-sm">Or with</p> */}
         <div className="flex flex-col gap-2">
           {Object.values(providerMap).map((provider) => (
             <form
-              key={provider.id} // ✅ FIXED: React key error
+              key={provider.id} // FIXED: React key error
               action={async () => {
                 "use server";
                 try {
@@ -108,6 +113,16 @@ export default async function SignInPage({
           ))}
         </div>
       </div>
+
+      <p className="mt-4 text-sm text-center">
+        Don&apos;t have an account{" "}
+        <Link
+          href="/new-user"
+          className="text-[#5B8266] active:hover:text-[#212922] underline"
+        >
+          Sign up
+        </Link>
+      </p>
     </div>
   );
 }

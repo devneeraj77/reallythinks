@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import "next-auth/jwt";
-import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter";
 import redis from "./lib/redis";
@@ -15,7 +14,6 @@ const CredentialsSchema = z.object({
 });
 
 const providers: Provider[] = [
-  Google,
   Credentials({
     // You can specify which fields should be submitted, by adding keys to the `credentials` object.
     // e.g. domain, username, password, 2FA token, etc.
@@ -108,7 +106,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, trigger, session, profile, account }) {
       if (trigger === "update") token.name = session.user.name;
       if (profile) {
-        
       }
       if (account?.provider === "keycloak") {
         return { ...token, accessToken: account.access_token };

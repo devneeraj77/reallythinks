@@ -18,13 +18,13 @@ export default function SendMessage({ receiver }: SendMessageProps) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messageCount, setMessageCount] = useState(0); // Track number of messages sent in the last 24 hours
-  const [timeRemaining, setTimeRemaining] = useState(0); // Track remaining time for re-sending messages
+  const [timeRemaining, setTimeRemaining] = useState(""); // Track remaining time in hours and minutes
   const [timeRemainingInSeconds, setTimeRemainingInSeconds] = useState(0); // Track remaining time in seconds for message limit
 
   // Check cookie for message count and last sent time
   useEffect(() => {
-    const lastSentTime = getCookie("lastSentTime");
-    const sentCount = getCookie("messageCount");
+    const lastSentTime = getCookie(`lastSentTime_${receiver}`); // Store cookies per receiver
+    const sentCount = getCookie(`messageCount_${receiver}`);
 
     // Ensure sentCount is parsed as a number and handle cases where the cookie might not exist
     const parsedSentCount = sentCount ? parseInt(sentCount.toString(), 10) : 0;
@@ -36,26 +36,34 @@ export default function SendMessage({ receiver }: SendMessageProps) {
       if (timeDiff < 24 * 60 * 60 * 1000) {
         // If within 24 hours
         setMessageCount(parsedSentCount);
-        setTimeRemaining(
-          Math.ceil((24 * 60 * 60 * 1000 - timeDiff) / (60 * 1000))
-        ); // Time remaining for next message in minutes
+
+        // Calculate time remaining for next message (in hours and minutes)
+        const remainingMillis = 24 * 60 * 60 * 1000 - timeDiff;
+        const hours = Math.floor(remainingMillis / (60 * 60 * 1000)); // Calculate remaining hours
+        const minutes = Math.floor(
+          (remainingMillis % (60 * 60 * 1000)) / (60 * 1000)
+        ); // Calculate remaining minutes
+        setTimeRemaining(`${hours}h ${minutes}m`);
+
+        // Calculate remaining time in seconds for message limit
         setTimeRemainingInSeconds(
           Math.ceil((24 * 60 * 60 * 1000 - timeDiff) / 1000)
         ); // Time remaining in seconds for message limit
       } else {
         // Reset message count if more than 24 hours
         setMessageCount(0);
-        setTimeRemaining(0);
+        setTimeRemaining("");
+        setTimeRemainingInSeconds(0);
       }
     }
-  }, []);
+  }, [receiver]);
 
   const handleSendMessage = async () => {
     // Check if the user has sent 2 messages in the last 24 hours
     if (messageCount >= 2) {
       setStatus({
         success: false,
-        message: `You can only send 2 messages within 24 hours. Please wait ${timeRemaining} minutes.`,
+        message: `You can only send 2 messages within 24 hours. Please wait ${timeRemaining} seconds.`,
       });
       return;
     }
@@ -92,9 +100,13 @@ export default function SendMessage({ receiver }: SendMessageProps) {
 
         // Update message count and last sent time in cookies
         const currentTime = Date.now();
-        setMessageCount((prev) => prev + 1);
-        setCookie("messageCount", messageCount + 1, { maxAge: 24 * 60 * 60 }); // Store message count for 24 hours
-        setCookie("lastSentTime", currentTime.toString(), {
+        const newMessageCount = messageCount + 1;
+        setMessageCount(newMessageCount);
+
+        setCookie(`messageCount_${receiver}`, newMessageCount, {
+          maxAge: 24 * 60 * 60,
+        }); // Store message count for 24 hours
+        setCookie(`lastSentTime_${receiver}`, currentTime.toString(), {
           maxAge: 24 * 60 * 60,
         }); // Store last sent time
       } else {
@@ -115,11 +127,11 @@ export default function SendMessage({ receiver }: SendMessageProps) {
   };
 
   return (
-    <main className="h-screen">
-      <div className="max-w-screen-sm rounded-xl text-[#233329] px-4 pt-16 mx-auto pb-44 gap-4 grid">
+    <main className="min-h-screen">
+      <div className="max-w-screen-sm border-1 border-[#5B8266] rounded-xl text-[#233329] px-4 pt-16 mx-auto pb-44 gap-4 grid">
         <div>
           <h2 className="text-lg text-balance text-[#233329] dark:text-gray-400 pt-6">
-            Send an anonymous message to @{receiver}
+            Send an anonymous <br /> message to @{receiver}
           </h2>
           <Textarea
             className="max-w-xl pt-2 text-[#6A7152]"
@@ -132,7 +144,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
           <Button
             color="primary"
             onPress={handleSendMessage}
-            className={`mt-4 h-10 rounded-md px-4 text-white transition-opacity ${
+            className={`mt-4 h-10 bg-[#233329] rounded-md px-4 text-white transition-opacity ${
               loading ? "opacity-30" : ""
             }`}
           >
@@ -159,27 +171,27 @@ export default function SendMessage({ receiver }: SendMessageProps) {
               />
             </div>
           )}
-        </div>
-        <div className="overflow-x-auto text-sm bg-[#C2EFB3] text-[#233329] dark:bg-gray-800 rounded-md mt-6 px-3 py-2 ">
-          <h2 className="text-md text-balance text-gray-600 dark:text-gray-400 pb-2">
-            Message Status:
-          </h2>
-          <table className="table-auto w-full border-collapse">
-            <tbody>
-              <tr>
-                <td className="font-semibold w-32">Status</td>
-                <td className="text-gray-600 dark:text-gray-400">
-                  {status.success ? "Success" : "Failed"}
-                </td>
-              </tr>
-              <tr>
-                <td className="font-semibold w-32">Message</td>
-                <td className="text-gray-600 dark:text-gray-400">
-                  {status.message}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          {/* <div className="overflow-x-auto mt-8 text-sm bg-[#C2EFB3] text-[#233329] dark:bg-gray-800 rounded-md mt-6 px-3 py-2 ">
+            <h2 className="text-md text-balance text-gray-600 dark:text-gray-400 pb-2">
+              Message Status:
+            </h2>
+            <table className="table-auto w-full border-collapse">
+              <tbody>
+                <tr>
+                  <td className="font-semibold w-32">Status</td>
+                  <td className="text-gray-600 dark:text-gray-400">
+                    {status.success ? "Success" : "Failed"}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="font-semibold w-32">Message</td>
+                  <td className="text-gray-600 dark:text-gray-400">
+                    {status.message}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div> */}
         </div>
       </div>
     </main>
