@@ -16,9 +16,9 @@ export default async function UserButton() {
   if (!session?.user) return <SignIn />;
   return (
     <div className="flex items-center gap-2">
-      <span className="hidden text-sm sm:inline-flex">
+      {/* <span className="hidden text-sm sm:inline-flex">
         {session.user.email}
-      </span>
+      </span> */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -44,8 +44,7 @@ export default async function UserButton() {
               <p className="text-muted-foreground text-xs leading-none">
                 {session.user.email}
               </p>
-              <Link href={"/dashboard"} >Dashboard</Link>
-              <Link href={"https://super-umbrella-69xvj4w4j94frv6v-3000.app.github.dev/dashboard"} >Das</Link>
+              <Link href={"/dashboard"}>Dashboard</Link>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuItem>

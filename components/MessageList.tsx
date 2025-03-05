@@ -5,10 +5,11 @@ import {
   IconRefresh,
   IconScreenshot,
   IconShare,
-  IconTrash,
+  IconTrashFilled,
 } from "@tabler/icons-react";
 import InstaStoryShare from "./InstaStoryShare";
 import { Chip } from "@heroui/chip";
+import { Button } from "@heroui/button";
 
 interface Message {
   receiver: string;
@@ -80,7 +81,30 @@ export default function MessageList({ username }: MessageListProps) {
   const getTimeAgo = (timestamp: number) => {
     const now = Date.now();
     const diff = Math.floor((now - timestamp) / 1000);
-    return diff < 60 ? `${diff}s ago` : new Date(timestamp).toLocaleString();
+
+    // If the message was sent within the last 60 seconds
+    if (diff < 60) {
+      return `${diff}s ago`;
+    }
+
+    // If the message was sent within the last 60 minutes
+    if (diff < 3600) {
+      const minutes = Math.floor(diff / 60);
+      return `${minutes}m ago`;
+    }
+
+    // If the message was sent within the last 3 hours
+    if (diff < 10800) {
+      const hours = Math.floor(diff / 3600);
+      return `${hours}h ago`;
+    }
+
+    // For messages older than 3 hours, show the formatted date
+    return new Date(timestamp).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
   };
 
   return (
@@ -110,31 +134,34 @@ export default function MessageList({ username }: MessageListProps) {
               className="p-3 text-[#212922]  bg-white rounded-lg shadow-sm flex sm:flex-row flex-col  animate-fade-in"
             >
               <div className="flex-1  ">
-                <p>{msg.content}</p>
-                <span className="text-xs py-2">
+                <p className="text-base text-[#212922]">{msg.content}</p>
+                <span className="text-xs text-[#5B8266] py-2">
                   {getTimeAgo(msg.timestamp)}
                 </span>
               </div>
 
               <div className="flex jusitify-center items-center gap-3  border-blue-200">
-                <button
-                  onClick={() => setSelectedMessage(msg)}
+                <Button
+                  size="sm"
+                  color="default"
+                  variant="flat"
+                  onPress={() => setSelectedMessage(msg)}
                   className=" px-3  border-blue-200 w-full py-1 rounded-md"
                 >
                   {/* <IconShare className="w-5 h-5 mr-1" /> Share */}
-                  <Chip color="warning" variant="flat">
-                    <IconScreenshot className="w-5 h-5 m-1 text-[#212922]" />
-                    {/* <IconTrash className="w-5 h-5 mr-1 text-red-500 hover:text-red-600 transition flex items-center " /> */}
-                  </Chip>
-                </button>
-                <button
-                  onClick={() => handleDelete(msg.timestamp)}
+
+                  <IconScreenshot className="w-5 h-5 m-1 text-[#212922]" />
+                  {/* <IconTrash className="w-5 h-5 mr-1 text-red-500 hover:text-red-600 transition flex items-center " /> */}
+                </Button>
+                <Button
+                  size="sm"
+                  color="default"
+                  variant="flat"
+                  onPress={() => handleDelete(msg.timestamp)}
                   className=" px-3 py-1  border-blue-200 w-full rounded-md "
                 >
-                  <Chip color="warning" variant="flat">
-                    <IconTrash className="w-5 h-5 m-1 text-red-500 hover:text-red-600 transition flex items-center " />
-                  </Chip>
-                </button>
+                  <IconTrashFilled className="w-5 h-5 m-1 text-red-500 hover:text-red-600 transition flex items-center " />
+                </Button>
               </div>
             </li>
           ))}
