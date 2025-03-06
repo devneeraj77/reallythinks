@@ -16,13 +16,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className}`}>
         <Header />
-
         <HeroUIProvider>
-          <main className="overflow-hidden min-h-screen m-auto max-w-5xl ">
-            {children}
-          </main>
+          <main className="overflow-hidden min-h-screen ">{children}</main>
         </HeroUIProvider>
         <Footer />
       </body>

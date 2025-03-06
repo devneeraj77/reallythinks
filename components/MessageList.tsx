@@ -8,7 +8,6 @@ import {
   IconTrashFilled,
 } from "@tabler/icons-react";
 import InstaStoryShare from "./InstaStoryShare";
-import { Chip } from "@heroui/chip";
 import { Button } from "@heroui/button";
 
 interface Message {

@@ -1,3 +1,9 @@
+import { SpotlightNewDemo } from "@/components/SpotLight";
+
 export default async function Index() {
-  return <div className="flex flex-col jusitify-center gap-6">gfsg</div>;
+  return (
+    <section>
+      <SpotlightNewDemo />
+    </section>
+  );
 }
