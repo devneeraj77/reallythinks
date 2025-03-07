@@ -9,9 +9,11 @@ export function SpotlightNewDemo() {
       <Spotlight />
       <div className=" p-4 max-w-7xl  mx-auto relative  w-full pt-20 md:pt-0">
         <h1 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">
-          Anonymous <br /> Speak your mind, stay anonymous, make an impact.
+          Anonymously things <br /> Express Freely, make an impact, Stay
+          Anonymous!
+          {/* Anonymous <br /> Speak your mind, stay anonymous, make an impact. */}
         </h1>
-        <p className="mt-4 font-normal text-base text-neutral-300 max-w-lg text-center mx-auto">
+        <p className="mt-4 font-normal text-base text-neutral-300 max-w-4xl text-center mx-auto">
           Ever had a thought too weird to say out loud? A secret itching to
           escape? Welcome to reallythinks, where you send messages into the
           abyss—no names, no faces, just raw, unfiltered words. Will they be
