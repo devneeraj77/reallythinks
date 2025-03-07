@@ -33,7 +33,7 @@ export default async function SignInPage({
           name: user.name,
         });
 
-        return redirect(searchParams?.callbackUrl ?? "/dashboard");
+        return redirect("/dashboard");
       } else {
         throw new AuthError("Invalid credentials");
       }
