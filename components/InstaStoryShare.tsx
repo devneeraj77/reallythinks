@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@heroui/button";
 import { IconScreenshot } from "@tabler/icons-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -39,7 +40,7 @@ export default function InstaStoryShare({
     ctx.fillStyle = "#ffffff";
     ctx.font = "bold 60px Arial";
     ctx.textAlign = "center";
-    ctx.fillText("Someone thinks about you!", canvas.width / 2, 400);
+    ctx.fillText("Someone asks about you!", canvas.width / 2, 400);
 
     // Message Box Properties
     const boxX = 100;
@@ -118,7 +119,10 @@ export default function InstaStoryShare({
 
   return (
     <div className="flex flex-col items-center justify-center p-6">
-      <h2 className="text-lg font-semibold flex gap-2 justiy-center align-center">
+      <h2
+        id="sharetodown"
+        className="text-lg font-semibold flex gap-2 justiy-center align-center"
+      >
         {" "}
         <IconScreenshot /> Share on Instagram Story
       </h2>
@@ -137,12 +141,14 @@ export default function InstaStoryShare({
 
       {/* Single button to share & download */}
       {imageUrl && (
-        <button
-          onClick={handleShareAndDownload}
-          className="mt-4 bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition"
+        <Button
+          onPress={handleShareAndDownload}
+          color="default"
+          variant="flat"
+          className="mt-4 px-4 py-2 "
         >
           Share & Download Story
-        </button>
+        </Button>
       )}
     </div>
   );

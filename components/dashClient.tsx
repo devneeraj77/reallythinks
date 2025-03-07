@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import MessageList from "@/components/MessageList";
 import { useState } from "react";
 import InstaStoryShare from "./InstaStoryShare";
+import { Chip } from "@heroui/chip";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -21,10 +22,10 @@ export default function Dashboard() {
   const username = session?.user?.name || "";
 
   return (
-    <main className="container text-balance text-[#233329] dark:text-gray-400 mx-auto px-4 py-8">
+    <main className="container text-balance mx-auto max-w-4xl text-[#233329] dark:text-gray-400 mx-auto px-4 py-8">
       <h1 className="text-2xl  font-bold mb-4">Dashboard</h1>
       <p className="mb-6">
-        Welcome, {username}! Here are your anonymous messages:
+        Welcome, @{username} Here are your anonymous messages:
       </p>
       <MessageList username={username} />
       {selectedMessage && (

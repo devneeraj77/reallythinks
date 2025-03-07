@@ -9,6 +9,7 @@ import {
 } from "@tabler/icons-react";
 import InstaStoryShare from "./InstaStoryShare";
 import { Button } from "@heroui/button";
+import Link from "next/link";
 
 interface Message {
   receiver: string;
@@ -126,13 +127,13 @@ export default function MessageList({ username }: MessageListProps) {
       ) : messages.length === 0 ? (
         <p className="text-gray-500">No messages found.</p>
       ) : (
-        <ul className="space-y-3  border-blue-200">
+        <ul className="space-y-3 border-blue-500 ">
           {messages.map((msg) => (
             <li
               key={msg.timestamp}
-              className="p-3 text-[#212922]  bg-white rounded-lg shadow-sm flex sm:flex-row flex-col  animate-fade-in"
+              className="p-3 col-span-2 text-[#212922]  bg-white rounded-lg shadow-sm flex sm:flex-row flex-col  animate-fade-in"
             >
-              <div className="flex-1  ">
+              <div className="flex-1 ">
                 <p className="text-base text-[#212922]">{msg.content}</p>
                 <span className="text-xs text-[#5B8266] py-2">
                   {getTimeAgo(msg.timestamp)}
@@ -141,6 +142,8 @@ export default function MessageList({ username }: MessageListProps) {
 
               <div className="flex jusitify-center items-center gap-3  border-blue-200">
                 <Button
+                  as={Link}
+                  href="#sharetodown"
                   size="sm"
                   color="default"
                   variant="flat"
