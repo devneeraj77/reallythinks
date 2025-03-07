@@ -8,7 +8,7 @@ import { HeroUIProvider } from "@heroui/react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "NextAuth.js Example",
+  title: "Reallythinks- Share anonymously. Speak freely. No strings attached.",
   description:
     "This is an example site to demonstrate how to use NextAuth.js for authentication",
 };
