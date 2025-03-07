@@ -33,7 +33,7 @@ export default async function SignInPage({
           name: user.name,
         });
 
-        return redirect("/dashboard");
+        return redirect("/profile");
       } else {
         throw new AuthError("Invalid credentials");
       }
