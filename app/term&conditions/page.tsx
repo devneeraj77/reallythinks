@@ -1,8 +1,8 @@
 export default function PolicyPage() {
   return (
-    <div className="space-y-2">
+    <div className="space-y-8 py-4 max-w-3xl mx-auto text-sm p-2 ">
       <section>
-        <h2 className="text-xl font-bold">Terms of Service</h2>
+        <h2 className="text-xl font-bold ">Terms of Service</h2>
         <p>
           THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY
           KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
@@ -14,7 +14,7 @@ export default function PolicyPage() {
         </p>
       </section>
       <section>
-        <h2 className="text-xl font-bold">Privacy Policy</h2>
+        <h2 className="text-xl font-bold ">Privacy Policy</h2>
         <p>
           This site uses JSON Web Tokens and a Key-Value database for sessions
           and WebAuthn authenticators which resets every 2 hours.

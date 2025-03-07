@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en">
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} text-[#212922] scroll-smooth`}>
         <Header />
         <HeroUIProvider>
           <main className="overflow-hidden min-h-screen ">{children}</main>
