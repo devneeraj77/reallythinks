@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Reallythinks- Share anonymously. Speak freely. No strings attached.",
   description:
-    "This is an example site to demonstrate how to use NextAuth.js for authentication",
+    "Reallythinks, the safest way to send and receive anonymous messages. Share your thoughts without revealing your identity and connect with others through completely private and secure messaging. Whether it's a confession, feedback, or just a fun surprise, your anonymity is guaranteed!",
 };
 
 export default function RootLayout({ children }: React.PropsWithChildren) {
