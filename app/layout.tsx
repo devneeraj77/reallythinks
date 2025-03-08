@@ -8,7 +8,7 @@ import { HeroUIProvider } from "@heroui/react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Reallythinks- Share anonymously. Speak freely. No strings attached.",
+  title: "Reallythinks - anonymously. Speak freely. No strings attached.",
   description:
     "Reallythinks, the safest way to send and receive anonymous messages. Share your thoughts without revealing your identity and connect with others through completely private and secure messaging. Whether it's a confession, feedback, or just a fun surprise, your anonymity is guaranteed!",
 };
