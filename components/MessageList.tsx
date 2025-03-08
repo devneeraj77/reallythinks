@@ -146,7 +146,7 @@ export default function MessageList({ username }: MessageListProps) {
                 <p className="text-base text-[#212922]">{msg.content}</p>
                 <span className="text-xs text-[#5B8266] py-2">
                   {getTimeAgo(msg.timestamp)}
-                </span>
+                </span> gf
               </div> */}
                 <CardFooter>
                   <div className="flex  w-full jusitify-center items-center gap-3  ">

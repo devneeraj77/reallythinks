@@ -8,8 +8,6 @@ export default function Footer() {
         {/* <CustomLink href="https://www.npmjs.com/package/next-auth">
           NPM
         </CustomLink> */}
-
-        <CustomLink href="/privacypolicy">Policy</CustomLink>
       </div>
       <div className="flex items-center justify-start gap-2">
         {/* <CustomLink href="https://npmjs.org/package/next-auth">
