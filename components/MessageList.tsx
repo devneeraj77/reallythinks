@@ -4,12 +4,12 @@ import { useState, useEffect, useCallback } from "react";
 import {
   IconRefresh,
   IconScreenshot,
-  IconShare,
   IconTrashFilled,
 } from "@tabler/icons-react";
 import InstaStoryShare from "./InstaStoryShare";
 import { Button } from "@heroui/button";
 import Link from "next/link";
+import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 
 interface Message {
   receiver: string;
@@ -26,6 +26,7 @@ export default function MessageList({ username }: MessageListProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+  const [showDialog, setShowDialog] = useState(false);
 
   //  Optimized fetchMessages with useCallback
   const fetchMessages = useCallback(async () => {
@@ -127,44 +128,54 @@ export default function MessageList({ username }: MessageListProps) {
       ) : messages.length === 0 ? (
         <p className="text-gray-500">No messages found.</p>
       ) : (
-        <ul className="space-y-3 border-blue-500 ">
+        <ul className="border-blue-500 grid grid-flow-row-dense grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
           {messages.map((msg) => (
             <li
               key={msg.timestamp}
-              className="p-3 col-span-2 text-[#212922]  bg-white rounded-lg shadow-sm flex sm:flex-row flex-col  animate-fade-in"
+              className="m-3  text-[#212922]  rounded-lg shadow-sm   animate-fade-in"
             >
-              <div className="flex-1 ">
+              <Card className="aspect-3/2">
+                <CardHeader className="text-xs text-[#5B8266] py-2">
+                  {getTimeAgo(msg.timestamp)}
+                </CardHeader>
+                <CardBody className="text-base text-[#212922]">
+                  {msg.content}
+                </CardBody>
+
+                {/* <div className="flex-1 ">
                 <p className="text-base text-[#212922]">{msg.content}</p>
                 <span className="text-xs text-[#5B8266] py-2">
                   {getTimeAgo(msg.timestamp)}
                 </span>
-              </div>
+              </div> */}
+                <CardFooter>
+                  <div className="flex  w-full jusitify-center items-center gap-3  ">
+                    <Button
+                      as={Link}
+                      href="#sharetodown"
+                      size="sm"
+                      color="default"
+                      variant="flat"
+                      onPress={() => setSelectedMessage(msg)}
+                      className=" border-blue-200 w-full py-1 rounded-md"
+                    >
+                      {/* <IconShare className="w-5 h-5 mr-1" /> Share */}
 
-              <div className="flex jusitify-center items-center gap-3  border-blue-200">
-                <Button
-                  as={Link}
-                  href="#sharetodown"
-                  size="sm"
-                  color="default"
-                  variant="flat"
-                  onPress={() => setSelectedMessage(msg)}
-                  className=" px-3  border-blue-200 w-full py-1 rounded-md"
-                >
-                  {/* <IconShare className="w-5 h-5 mr-1" /> Share */}
-
-                  <IconScreenshot className="w-5 h-5 m-1 text-[#212922]" />
-                  {/* <IconTrash className="w-5 h-5 mr-1 text-red-500 hover:text-red-600 transition flex items-center " /> */}
-                </Button>
-                <Button
-                  size="sm"
-                  color="default"
-                  variant="flat"
-                  onPress={() => handleDelete(msg.timestamp)}
-                  className=" px-3 py-1  border-blue-200 w-full rounded-md "
-                >
-                  <IconTrashFilled className="w-5 h-5 m-1 text-red-500 hover:text-red-600 transition flex items-center " />
-                </Button>
-              </div>
+                      <IconScreenshot className="w-5 h-5 m-1 text-[#212922]" />
+                      {/* <IconTrash className="w-5 h-5 mr-1 text-red-500 hover:text-red-600 transition flex items-center " /> */}
+                    </Button>
+                    <Button
+                      size="sm"
+                      color="default"
+                      variant="flat"
+                      onPress={() => handleDelete(msg.timestamp)}
+                      className=" px-3 py-1  border-blue-200 w-full rounded-md "
+                    >
+                      <IconTrashFilled className="w-5 h-5 m-1 text-red-500 hover:text-red-600 transition flex items-center " />
+                    </Button>
+                  </div>
+                </CardFooter>
+              </Card>
             </li>
           ))}
         </ul>
