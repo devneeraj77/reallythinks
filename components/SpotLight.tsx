@@ -2,6 +2,7 @@
 import React from "react";
 import { Spotlight } from "@/components/ui/spotlight-new";
 import { Chip } from "@heroui/chip";
+import { Button } from "@heroui/button";
 
 export function SpotlightNewDemo() {
   return (
@@ -19,6 +20,11 @@ export function SpotlightNewDemo() {
           read? Will they be ignored? That&apos;s the mystery. That&apos;s the
           thrill.
         </p>
+        {/* <div className="max-w-full text-center my-10 py-6">
+          <Button variant="flat" color="success" className="">
+            hello
+          </Button>
+        </div> */}
       </div>
     </div>
   );
