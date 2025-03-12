@@ -125,7 +125,6 @@ export default function SendMessage({ receiver }: SendMessageProps) {
       setLoading(false);
     }
   };
-
   return (
     <main className="min-h-screen">
       <div className="max-w-screen-sm border-1 border-[#5B8266] rounded-xl text-[#233329] px-4 pt-16 mx-auto pb-44 gap-4 grid">
@@ -133,6 +132,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
           <h2 className="text-lg text-balance text-[#233329] dark:text-gray-400 pt-6">
             Send an anonymous <br /> message to @{receiver}
           </h2>
+
           <Textarea
             className="max-w-xl pt-2 text-[#6A7152]"
             label="Anonymously"

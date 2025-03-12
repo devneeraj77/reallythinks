@@ -109,7 +109,7 @@ export default function MessageList({ username }: MessageListProps) {
   };
 
   return (
-    <div className="p-4 bg-[#C2EFB3] text-balance text-[#233329] dark:text-gray-400 rounded-lg shadow-md ">
+    <div className="p-4 bg-[#C2EFB3] text-balance text-[#233329] rounded-lg shadow-md ">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Messages</h2>
         <button

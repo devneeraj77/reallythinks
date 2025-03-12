@@ -1,18 +1,32 @@
 import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
-import { providerMap, signIn } from "@/auth";
+import { auth, providerMap, signIn } from "@/auth";
 import redis from "@/lib/redis";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
-import Link from "next/link";
+import { Link } from "@heroui/link";
 
-export default async function SignInPage({
-  searchParams: searchParamsPromise,
-}: {
-  searchParams: Promise<{ callbackUrl?: string }>;
-}) {
-  // ✅ Await the searchParams before using
-  const searchParams = await searchParamsPromise;
+export default async function SignInPage() {
+  const session = auth();
+
+  if (await session) {
+    return (
+      <div className="h-screen   flex justify-center items-center">
+        <p className="text-center max-w-xl m-auto bg-[#C2EFB3] text-balance text-[#212922] rounded-lg shadow-md  py-8 px-6">
+          You&apos;re in logged in click to through <br />{" "}
+          <Link
+            isBlock
+            showAnchorIcon
+            color="foreground"
+            className="text-[#212922]"
+            href="/profile"
+          >
+            Profile
+          </Link>
+        </p>
+      </div>
+    );
+  }
 
   const handleSignIn = async (FormData: FormData) => {
     "use server";
@@ -93,7 +107,7 @@ export default async function SignInPage({
                 "use server";
                 try {
                   await signIn(provider.id, {
-                    redirectTo: searchParams?.callbackUrl ?? "/dashboard",
+                    redirectTo: "/dashboard",
                   });
                 } catch (error) {
                   if (error instanceof AuthError) {
