@@ -5,14 +5,19 @@ import redis from "@/lib/redis";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
+import { User } from "@/lib/schemas/userSchema";
+import { Chip } from "@heroui/chip";
 
 export default async function SignInPage() {
   const session = auth();
 
   if (await session) {
     return (
-      <div className="h-screen   flex justify-center items-center">
-        <p className="text-center max-w-xl m-auto bg-[#C2EFB3] text-balance text-[#212922] rounded-lg shadow-md  py-8 px-6">
+      <div className="h-80   flex justify-center items-center">
+        <Chip
+          size="sm"
+          className="text-center max-w-xl m-auto bg-[#3E625918] text-balance text-[#212922] rounded-lg shadow-md  py-8 px-6"
+        >
           You&apos;re in logged in click to through <br />{" "}
           <Link
             isBlock
@@ -23,7 +28,7 @@ export default async function SignInPage() {
           >
             Profile
           </Link>
-        </p>
+        </Chip>
       </div>
     );
   }
@@ -37,7 +42,7 @@ export default async function SignInPage() {
     try {
       // Fetch user from Redis
 
-      const user = await redis.hgetall(`user:${username}`);
+      const user = await redis.hgetall<User>(`user:${username}`);
 
       if (user && user.password === password) {
         await signIn("credentials", {

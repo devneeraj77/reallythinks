@@ -33,14 +33,19 @@ export const UserSignupSchema = z.object({
 
 // User schema for login (credentials)
 export const userLoginSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
+  name: z.string().min(3, "Username must be at least 3 characters"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  email: z.string().email("Invalid email address"),
 });
 
 // User schema for NextAuth session data
-export const userSessionSchema = z.object({
+export const UserSessionSchema = z.object({
   username: z.string(),
   email: z.string(),
   profilePic: z.string().optional(),
   lastActive: z.date().optional(),
 });
+
+export type User = z.infer<typeof userLoginSchema>;
+export type UserSession = z.infer<typeof UserSessionSchema>;
+export type UserSignup = z.infer<typeof UserSignupSchema>;
