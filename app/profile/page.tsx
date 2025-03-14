@@ -56,10 +56,6 @@ export default async function UserButton() {
               }
               description={session.user.email}
             />
-            <p className="text-[#3E6259] text-xs sm:text-base">
-              Let&apos;s dive into the secret thoughts people have shared with
-              you!
-            </p>
           </div>
           <div className="w-full py-10 text-center border-t-1">
             <p className="text-[#3E6259] text-xs sm:text-base">

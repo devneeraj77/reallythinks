@@ -5,11 +5,20 @@ import {
   IconRefresh,
   IconScreenshot,
   IconTrashFilled,
+  IconX,
 } from "@tabler/icons-react";
 import InstaStoryShare from "./InstaStoryShare";
 import { Button } from "@heroui/button";
 import Link from "next/link";
 import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Avatar } from "./ui/avatar";
 
 interface Message {
   receiver: string;
@@ -104,12 +113,13 @@ export default function MessageList({ username }: MessageListProps) {
     return new Date(timestamp).toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "short",
+      dayPeriod: "narrow",
       year: "numeric",
     });
   };
 
   return (
-    <div className="p-4 bg-[#C2EFB3] text-balance text-[#233329] rounded-lg shadow-md ">
+    <div className="p-4 bg-[#3E625918] text-balance text-[#233329] rounded-lg shadow-md ">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Messages</h2>
         <button
@@ -164,7 +174,7 @@ export default function MessageList({ username }: MessageListProps) {
                       <IconScreenshot className="w-5 h-5 m-1 text-[#212922]" />
                       {/* <IconTrash className="w-5 h-5 mr-1 text-red-500 hover:text-red-600 transition flex items-center " /> */}
                     </Button>
-                    <Button
+                    {/* <Button
                       size="sm"
                       color="default"
                       variant="flat"
@@ -172,7 +182,41 @@ export default function MessageList({ username }: MessageListProps) {
                       className=" px-3 py-1  border-blue-200 w-full rounded-md "
                     >
                       <IconTrashFilled className="w-5 h-5 m-1 text-red-500 hover:text-red-600 transition flex items-center " />
-                    </Button>
+                    
+                    </Button> */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="flat"
+                          size="sm"
+                          color="default"
+                          className=" border-blue-200 w-full py-1 rounded-md"
+                        >
+                          {" "}
+                          <IconX className="w-5 h-5 m-1 text-[#212922]" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className="w-56"
+                        align="end"
+                        forceMount
+                      >
+                        <DropdownMenuLabel className="font-normal ">
+                          <div className="flex flex-col space-y-1">
+                            <p>Are you sure, delete.</p>
+                            <Button
+                              size="sm"
+                              color="default"
+                              variant="flat"
+                              onPress={() => handleDelete(msg.timestamp)}
+                              className=" px-3 py-1  border-blue-200 w-full rounded-md "
+                            >
+                              <IconTrashFilled className="w-5 h-5 m-1 text-red-500 hover:text-red-600 transition flex items-center " />
+                            </Button>
+                          </div>
+                        </DropdownMenuLabel>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </CardFooter>
               </Card>
