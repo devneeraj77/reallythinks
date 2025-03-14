@@ -5,6 +5,7 @@ import MessageList from "@/components/MessageList";
 import { useState } from "react";
 import InstaStoryShare from "./InstaStoryShare";
 import { Chip } from "@heroui/chip";
+import { Link } from "@heroui/link";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -15,7 +16,25 @@ export default function Dashboard() {
   }
 
   if (!session) {
-    return <p>You must be logged in to view your dashboard.</p>;
+    return (
+      <div className="h-80  flex justify-center items-center">
+        <Chip
+          size="sm"
+          className="text-center max-w-xl m-auto bg-[#3E625918] text-balance text-[#212922] rounded-lg shadow-md  py-8 px-6"
+        >
+          You&apos;re in logged in click to through <br />{" "}
+          <Link
+            isBlock
+            showAnchorIcon
+            color="foreground"
+            className="text-[#212922]"
+            href="/profile"
+          >
+            Profile
+          </Link>
+        </Chip>
+      </div>
+    );
   }
 
   // Assume the session user object has a "name" property.

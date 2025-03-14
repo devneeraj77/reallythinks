@@ -13,7 +13,7 @@ export default async function SignInPage() {
 
   if (await session) {
     return (
-      <div className="h-80   flex justify-center items-center">
+      <div className="h-80 flex justify-center items-center">
         <Chip
           size="sm"
           className="text-center max-w-xl m-auto bg-[#3E625918] text-balance text-[#212922] rounded-lg shadow-md  py-8 px-6"
