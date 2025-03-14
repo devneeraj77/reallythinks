@@ -139,7 +139,7 @@ export default async function SignInPage() {
           href="/new-user"
           className="text-[#5B8266] active:hover:text-[#212922] underline"
         >
-          Sign up
+          Create
         </Link>
       </p>
     </div>
