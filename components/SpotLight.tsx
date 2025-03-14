@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { Spotlight } from "@/components/ui/spotlight-new";
-import { Chip } from "@heroui/chip";
 import { Button } from "@heroui/button";
+import { Link } from "@heroui/link";
 
 export function SpotlightNewDemo() {
   return (
@@ -13,18 +13,33 @@ export function SpotlightNewDemo() {
           Stay Anonymous! <br /> Express Freely, make an impact.
           {/* Anonymous <br /> Speak your mind, stay anonymous, make an impact. */}
         </h1>
-        <p className="mt-4 font-normal text-base text-neutral-300 max-w-4xl text-center mx-auto">
+        <p className="mt-4 font-normal text-base text-neutral-300 max-w-3xl text-center mx-auto">
           Ever had a thought too weird to say out loud? A secret itching to
           escape? Welcome to reallythinks, where you send messages into the
           abyss—no names, no faces, just raw, unfiltered words. Will they be
           read? Will they be ignored? That&apos;s the mystery. That&apos;s the
           thrill.
         </p>
-        {/* <div className="max-w-full text-center my-10 py-6">
-          <Button variant="flat" color="success" className="">
-            hello
+        <div className="max-w-full flex gap-2 justify-center items-center text-center my-10 py-6">
+          <Button
+            variant="bordered"
+            as={Link}
+            href="/new-user"
+            color="success"
+            className=""
+          >
+            Create anonymonsly
           </Button>
-        </div> */}
+          <Button
+            variant="flat"
+            as={Link}
+            href="https://www.instagram.com/uneerajrekwar"
+            color="success"
+            className=""
+          >
+            find me
+          </Button>
+        </div>
       </div>
     </div>
   );

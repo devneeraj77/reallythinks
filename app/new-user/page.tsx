@@ -145,7 +145,7 @@ export default function SignUpPage() {
       <p className="mt-4 text-sm text-center">
         Already have an account?{" "}
         <Link
-          href="/auth/signin"
+          href="/signin"
           className="text-[#5B8266] active:hover:text-[#212922] underline"
         >
           Sign in
