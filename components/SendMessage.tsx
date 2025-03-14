@@ -129,7 +129,7 @@ export default function SendMessage({ receiver }: SendMessageProps) {
     <main className="min-h-screen">
       <div className="max-w-screen-sm border-1 border-[#5B8266] rounded-xl text-[#233329] px-4 pt-16 mx-auto pb-44 gap-4 grid">
         <div>
-          <h2 className="text-lg text-balance text-[#233329] dark:text-gray-400 pt-6">
+          <h2 className="text-lg  text-[#233329]  pt-6">
             Send an anonymous <br /> message to @{receiver}
           </h2>
 
