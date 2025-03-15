@@ -24,10 +24,10 @@ export const metadata: Metadata = {
     url: "https://reallythinks.vercel.app/",
     siteName: "Reallythinks",
     images: {
-      url: "https://images.unsplash.com/photo-1638376776402-9a4b75fe21bb?q=80&w=1577&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      width: 800,
-      height: 600,
-      alt: "My custom alt",
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/og.png`, // This URL should point to the og.png image
+      width: 1200,
+      height: 630,
+      alt: "ReallyThinks Open Graph Image",
     },
   },
   twitter: {
