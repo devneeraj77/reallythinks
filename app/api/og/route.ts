@@ -40,7 +40,7 @@ export async function GET() {
   const buffer = canvas.toBuffer("image/png");
   fs.writeFileSync(imagePath, buffer);
 
-  // Return JSON Response (Optional)
+  // Return JSON Response (Optional)f
   return NextResponse.json({
     message: "OG image created successfully",
     imagePath: "/og.png",
