@@ -229,6 +229,10 @@ export default function MessageList({ username }: MessageListProps) {
             message={selectedMessage.content}
             username={username}
           />
+          <p className="text-sm text-center">
+            This Instagram Story template is meant to be shared, so make sure
+            you delete it after you&apos;re done using it. Enjoy!
+          </p>
         </div>
       )}
     </div>
