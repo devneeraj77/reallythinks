@@ -22,15 +22,6 @@ export function SpotlightNewDemo() {
         </p>
         <div className="max-w-full flex gap-2 justify-center items-center text-center my-10 py-6">
           <Button
-            variant="bordered"
-            color="success"
-            as={Link}
-            href="/new-user"
-            className=""
-          >
-            Create anonymonsly
-          </Button>
-          <Button
             variant="flat"
             as={Link}
             href="/"
@@ -38,6 +29,15 @@ export function SpotlightNewDemo() {
             className=""
           >
             find it
+          </Button>
+          <Button
+            variant="bordered"
+            color="success"
+            as={Link}
+            href="/new-user"
+            className=""
+          >
+            Create anonymonsly
           </Button>
         </div>
       </div>

@@ -11,15 +11,15 @@ import {
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
 import React from "react";
-import { Link } from "@heroui/link";
+import { Button } from "./ui/button";
 
 export function MainNav() {
   return (
     <div className="flex items-center gap-4">
       <CustomLink href="/">
-        <Link color="success" className=" text-xl p-0">
+        <Button color="success" variant="ghost" className=" text-xl p-0">
           ▲
-        </Link>
+        </Button>
       </CustomLink>
       {/* <NavigationMenu>
         <NavigationMenuList>
