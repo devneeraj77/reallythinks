@@ -28,7 +28,7 @@ export async function GET() {
   );
 
   // Save the image to /public folder
-  const publicDir = path.resolve(process.cwd(), "public/");
+  const publicDir = path.resolve(process.cwd(), "public");
   const imagePath = path.join(publicDir, "og.png");
 
   // Ensure /public folder exists, create it if it doesn't
