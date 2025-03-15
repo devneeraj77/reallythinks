@@ -1,7 +1,4 @@
 "use client";
-
-import Image from "next/image";
-
 import { cn } from "@/lib/utils";
 import CustomLink from "./custom-link";
 import {
@@ -14,15 +11,15 @@ import {
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
 import React from "react";
-import { Button } from "./ui/button";
+import { Link } from "@heroui/link";
 
 export function MainNav() {
   return (
     <div className="flex items-center gap-4">
       <CustomLink href="/">
-        <Button variant="ghost" className="text-[#212922] text-xl p-0">
+        <Link color="success" className=" text-xl p-0">
           ▲
-        </Button>
+        </Link>
       </CustomLink>
       {/* <NavigationMenu>
         <NavigationMenuList>

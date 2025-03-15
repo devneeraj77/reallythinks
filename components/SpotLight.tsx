@@ -23,9 +23,9 @@ export function SpotlightNewDemo() {
         <div className="max-w-full flex gap-2 justify-center items-center text-center my-10 py-6">
           <Button
             variant="bordered"
+            color="success"
             as={Link}
             href="/new-user"
-            color="success"
             className=""
           >
             Create anonymonsly

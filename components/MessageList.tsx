@@ -14,11 +14,9 @@ import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Avatar } from "./ui/avatar";
 
 interface Message {
   receiver: string;
