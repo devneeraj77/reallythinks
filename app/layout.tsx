@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { HeroUIProvider } from "@heroui/react";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         </HeroUIProvider>
         <Footer />
       </body>
+      <GoogleAnalytics gaId="G-9X7JXSYBQN" />
     </html>
   );
 }
