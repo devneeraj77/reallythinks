@@ -33,11 +33,11 @@ export function SpotlightNewDemo() {
           <Button
             variant="flat"
             as={Link}
-            href="https://www.instagram.com/uneerajrekwar"
+            href="/"
             color="success"
             className=""
           >
-            find me
+            find it
           </Button>
         </div>
       </div>
