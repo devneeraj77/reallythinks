@@ -1,3 +1,4 @@
+import { Link } from "@heroui/link";
 import CustomLink from "./custom-link";
 
 export default function Footer() {
@@ -17,13 +18,15 @@ export default function Footer() {
       <div className="text-xs">
         {" "}
         © {new Date().getFullYear()} reallythinks. Created by{" "}
-        <a
+        <Link
+          color="success"
+          className="text-xs"
           href="https://www.instagram.com/uneerajrekwar"
           target="_blank"
           rel="noopener noreferrer"
         >
           neerajrekwar
-        </a>
+        </Link>
       </div>
     </footer>
   );

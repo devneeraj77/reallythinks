@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     creator: "@uneerajrekwar",
     creatorId: "7774646541651411874854",
     title: "Reallythinks is anonymous.",
-    images: [`${profileImage}`],
+    images: `${profileImage}`,
   },
 };
 
